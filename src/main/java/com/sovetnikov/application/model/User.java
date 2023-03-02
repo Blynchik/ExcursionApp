@@ -1,8 +1,10 @@
 package com.sovetnikov.application.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.Date;
@@ -33,7 +35,9 @@ public class User {
     private String phoneNumber;
 
     @Column(name = "registered_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
-    private Date registeredAt;
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date registeredAt = new Date();
 
     public User() {
     }
