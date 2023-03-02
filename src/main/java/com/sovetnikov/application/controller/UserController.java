@@ -68,7 +68,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
-                                         @RequestBody @Valid UserDto userTo,
+                                         @RequestBody @Valid UserDto userDto,
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -77,7 +77,7 @@ public class UserController {
         }
 
         if (userService.get(id).isPresent()) {
-            userService.update(Converter.getUser(userService.get(id).get(), userTo), id);
+            userService.update(Converter.getUser(userService.get(id).get(), userDto), id);
             return ResponseEntity.ok().body(userService.get(id).get());
         }
 

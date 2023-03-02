@@ -39,6 +39,11 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredAt = new Date();
 
+    @Column(name = "password", nullable = false)
+    @NotBlank
+    @Size(max = 256)
+    private String password;
+
     public User() {
     }
 
@@ -86,5 +91,13 @@ public class User {
 
     public void setRegisteredAt(Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
