@@ -1,6 +1,9 @@
 package com.sovetnikov.application.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 
@@ -14,13 +17,20 @@ public class User {
     private int id;
 
     @Column(name = "name")
+    @NotBlank(message = "Введите имя")
+    @Size(min = 2, max = 100, message = "Должно быть больше 2 и меньше 100 символов")
     private String name;
 
     @Column(name = "email")
+    @NotBlank(message = "Введите электронную почту")
+    @Size(max = 100, message = "Должно бытьменьше 100 символов")
+    @Email(message = "Введите корректную электронную почту")
     private String email;
 
     @Column(name = "phone_number")
-    private long phoneNumber;
+    @NotBlank(message = "Введите номер телефона")
+    @Size(min = 10, max = 11, message = "Введите номер телефона без 8")
+    private String phoneNumber;
 
     @Column(name = "registered_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     private Date registeredAt;
@@ -28,7 +38,7 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, long phoneNumber) {
+    public User(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -58,11 +68,11 @@ public class User {
         this.email = email;
     }
 
-    public long getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(long phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
