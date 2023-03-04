@@ -48,4 +48,12 @@ public class UserService {
     public void delete(int id) {
         userRepository.deleteById(id);
     }
+
+    public Optional<User> getByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> getByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
+    }
 }

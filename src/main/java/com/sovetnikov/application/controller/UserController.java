@@ -1,6 +1,7 @@
 package com.sovetnikov.application.controller;
 
 import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.dto.UserDtoWithPassword;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.ErrorList;
@@ -42,11 +43,11 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> create(@RequestBody @Valid UserDto userDto,
+    public ResponseEntity<Object> create(@RequestBody @Valid UserDtoWithPassword userDto,
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
 
@@ -68,11 +69,11 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
-                                         @RequestBody @Valid UserDto userDto,
+                                         @RequestBody @Valid UserDtoWithPassword userDto,
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
 

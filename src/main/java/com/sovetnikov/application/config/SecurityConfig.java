@@ -2,7 +2,7 @@ package com.sovetnikov.application.config;
 
 
 import com.sovetnikov.application.model.User;
-import com.sovetnikov.application.repository.UserRepository;
+import com.sovetnikov.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +22,11 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public SecurityConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public SecurityConfig(UserService userService) {
+        this.userService = userService;
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
-            Optional<User> optionalUser = userRepository.findByEmail(email);
+            Optional<User> optionalUser = userService.getByEmail(email);
 
             if(optionalUser.isEmpty()){
                 throw new UsernameNotFoundException("Пользователь не существует");
@@ -51,10 +51,17 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers("/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**");
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/login").anonymous()
+                .requestMatchers(HttpMethod.POST, "/api/login/register").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().defaultSuccessUrl("/api/users", true);

@@ -1,6 +1,7 @@
 package com.sovetnikov.application.util;
 
 import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.dto.UserDtoWithPassword;
 import com.sovetnikov.application.model.User;
 
 public class Converter {
@@ -9,10 +10,11 @@ public class Converter {
         return new UserDto(user.getName(), user.getEmail(), user.getPhoneNumber());
     }
 
-    public static User getUser(User user, UserDto userDto){
+    public static User getUser(User user, UserDtoWithPassword userDto){
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setPassword(userDto.getPassword());
         return user;
     }
 }
