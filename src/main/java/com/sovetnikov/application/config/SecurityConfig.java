@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -58,13 +59,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/login").anonymous()
-                .requestMatchers(HttpMethod.POST, "/api/login/register").anonymous()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().defaultSuccessUrl("/api/users", true);
+//        http.csrf().disable()
+//                .authorizeHttpRequests()
+//                .requestMatchers("/api/login").anonymous()
+//                .requestMatchers(HttpMethod.POST, "/api/login/register").anonymous()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin().defaultSuccessUrl("/api/users", true);
+
+        http.authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/api/login").anonymous()
+                .requestMatchers("/api/**").authenticated()
+                .and().httpBasic()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().csrf().disable();
 
         return http.build();
     }

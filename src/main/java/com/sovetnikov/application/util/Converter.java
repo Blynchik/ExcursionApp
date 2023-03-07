@@ -12,7 +12,7 @@ public class Converter {
 
     public static User getUser(User user, UserDtoWithPassword userDto){
         user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
+        user.setEmail(userDto.getEmail().toLowerCase());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setPassword(userDto.getPassword());
         return user;
