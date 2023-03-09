@@ -1,10 +1,7 @@
 package com.sovetnikov.application.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.Date;
 
@@ -31,6 +28,7 @@ public class User {
     @Column(name = "phone_number")
     @NotBlank(message = "Введите номер телефона")
     @Size(min = 10, max = 11, message = "Введите номер телефона без 8")
+    @Pattern(regexp = "\\d{10}", message = "Номер телефона должен состоять из 10 цифр без 8")
     private String phoneNumber;
 
     @Column(name = "registered_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)

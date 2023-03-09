@@ -2,6 +2,7 @@ package com.sovetnikov.application.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserDto {
@@ -16,6 +17,7 @@ public class UserDto {
     private String email;
     @NotBlank(message = "Введите номер телефона")
     @Size(min = 10, max = 11, message = "Введите номер телефона без 8")
+    @Pattern(regexp = "\\d{10}", message = "Номер телефона должен состоять из 10 цифр без 8")
     private String phoneNumber;
 
     public UserDto() {
