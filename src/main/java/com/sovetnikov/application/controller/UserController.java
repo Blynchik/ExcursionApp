@@ -5,6 +5,7 @@ import com.sovetnikov.application.dto.UserDtoWithPassword;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.ErrorList;
+import com.sovetnikov.application.util.UserValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserValidator userValidator;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserValidator userValidator) {
         this.userService = userService;
+        this.userValidator = userValidator;
     }
 
     @GetMapping("/{id}")
@@ -45,6 +48,8 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<Object> create(@RequestBody @Valid UserDtoWithPassword userDto,
                                          BindingResult bindingResult) {
+
+        userValidator.validate(userDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -71,6 +76,8 @@ public class UserController {
     public ResponseEntity<Object> update(@PathVariable int id,
                                          @RequestBody @Valid UserDtoWithPassword userDto,
                                          BindingResult bindingResult) {
+
+        userValidator.validate(userDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

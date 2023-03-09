@@ -31,7 +31,7 @@ public class RegistrationController {
         this.userValidator = userValidator;
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Object> register(@Valid @RequestBody UserDtoWithPassword userDto,
                                            BindingResult bindingResult) {
 

@@ -59,14 +59,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-//        http.csrf().disable()
-//                .authorizeHttpRequests()
-//                .requestMatchers("/api/login").anonymous()
-//                .requestMatchers(HttpMethod.POST, "/api/login/register").anonymous()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().defaultSuccessUrl("/api/users", true);
-
         http.authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/login").anonymous()
                 .requestMatchers("/api/**").authenticated()
