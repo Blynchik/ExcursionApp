@@ -1,10 +1,8 @@
 package com.sovetnikov.application.controller;
 
 import com.sovetnikov.application.dto.UserDto;
-import com.sovetnikov.application.dto.UserDtoWithPassword;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.RegistrationService;
-import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserValidator;
@@ -13,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/login")
@@ -32,8 +27,9 @@ public class RegistrationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> register(@Valid @RequestBody UserDtoWithPassword userDto,
-                                           BindingResult bindingResult) {
+    public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto,
+                                           BindingResult bindingResult,
+                                           @RequestParam String password) {
 
         userValidator.validate(userDto, bindingResult);
 
@@ -43,7 +39,9 @@ public class RegistrationController {
         }
 
         User user = new User();
-        registrationService.register(Converter.getUser(user, userDto));
+        Converter.getUser(user, userDto);
+        user.setPassword(password);
+        registrationService.register(user);
         return ResponseEntity.ok().body(user);
     }
 }

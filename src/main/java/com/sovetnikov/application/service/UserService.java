@@ -1,5 +1,6 @@
 package com.sovetnikov.application.service;
 
+import com.sovetnikov.application.config.SecurityConfig;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ public class UserService {
     }
 
     @Transactional
-    public void create(User user) {
+    public void create(User user){
+        user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -36,12 +38,8 @@ public class UserService {
 
     @Transactional
     public void update(User updatedUser, int id) {
-        User user = userRepository.getReferenceById(id);
-
-        user.setEmail(updatedUser.getEmail());
-        user.setPhoneNumber(updatedUser.getPhoneNumber());
-        user.setName(updatedUser.getName());
-
+        updatedUser.setRegisteredAt(userRepository.getReferenceById(id).getRegisteredAt());
+        updatedUser.setId(id);
         userRepository.save(updatedUser);
     }
 

@@ -1,7 +1,6 @@
 package com.sovetnikov.application.controller;
 
 import com.sovetnikov.application.dto.UserDto;
-import com.sovetnikov.application.dto.UserDtoWithPassword;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.ErrorList;
@@ -46,8 +45,9 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> create(@RequestBody @Valid UserDtoWithPassword userDto,
-                                         BindingResult bindingResult) {
+    public ResponseEntity<Object> create(@Valid @RequestBody UserDto userDto,
+                                           BindingResult bindingResult,
+                                           @RequestParam String password) {
 
         userValidator.validate(userDto, bindingResult);
 
@@ -57,7 +57,9 @@ public class UserController {
         }
 
         User user = new User();
-        userService.create(Converter.getUser(user, userDto));
+        Converter.getUser(user, userDto);
+        user.setPassword(password);
+        userService.create(user);
         return ResponseEntity.ok().body(user);
     }
 
@@ -74,7 +76,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
-                                         @RequestBody @Valid UserDtoWithPassword userDto,
+                                         @RequestBody @Valid UserDto userDto,
                                          BindingResult bindingResult) {
 
         userValidator.validate(userDto, bindingResult);
@@ -85,7 +87,9 @@ public class UserController {
         }
 
         if (userService.get(id).isPresent()) {
-            userService.update(Converter.getUser(userService.get(id).get(), userDto), id);
+            User user = new User();
+            Converter.getUser(user, userDto);
+            userService.update(user, id);
             return ResponseEntity.ok().body(userService.get(id).get());
         }
 

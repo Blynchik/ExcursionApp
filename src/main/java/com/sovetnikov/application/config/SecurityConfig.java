@@ -1,6 +1,7 @@
 package com.sovetnikov.application.config;
 
 
+import com.sovetnikov.application.model.AuthUser;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +43,8 @@ public class SecurityConfig {
         return email -> {
             Optional<User> optionalUser = userService.getByEmail(email);
 
-            if(optionalUser.isEmpty()){
-                throw new UsernameNotFoundException("Пользователь не существует");
-            }
-
-            return new org.springframework.security.core.userdetails.User(
-                    optionalUser.get().getEmail(),
-                    optionalUser.get().getPassword(),
-                    Collections.emptyList());
+            return new AuthUser(optionalUser.orElseThrow(
+                    ()-> new UsernameNotFoundException("Пользователь не существует")));
         };
     }
 
