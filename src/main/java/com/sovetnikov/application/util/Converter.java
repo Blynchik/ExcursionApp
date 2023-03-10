@@ -1,8 +1,10 @@
 package com.sovetnikov.application.util;
 
+import com.sovetnikov.application.config.SecurityConfig;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.dto.UserDtoWithPassword;
 import com.sovetnikov.application.model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Converter {
 
@@ -14,7 +16,7 @@ public class Converter {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail().toLowerCase());
         user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(userDto.getPassword()));
         return user;
     }
 }

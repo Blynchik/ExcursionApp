@@ -55,10 +55,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
-        System.out.println("-------------------------------");
-        System.out.println(ErrorList.getList(bindingResult));
-        System.out.println();
-        System.out.println("-------------------------------");
 
         User user = new User();
         userService.create(Converter.getUser(user, userDto));
