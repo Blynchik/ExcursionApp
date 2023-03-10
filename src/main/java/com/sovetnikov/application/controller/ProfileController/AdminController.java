@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.sovetnikov.application.util.Converter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -31,18 +32,19 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getOne(@PathVariable final int id) {
+    public ResponseEntity<UserDto> getOne(@PathVariable final int id) {
 
         if (userService.get(id).isPresent()) {
-            return ResponseEntity.ok().body(userService.get(id).get());
+            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
-        return ResponseEntity.ok().body(userService.getAll());
+    public ResponseEntity<List<UserDto>> getAll() {
+        return ResponseEntity.ok().body(userService.getAll().stream()
+                .map(Converter::getUserDto).toList());
     }
 
     @PostMapping()
@@ -61,15 +63,16 @@ public class AdminController {
         Converter.getUser(user, userDto);
         user.setPassword(password);
         userService.create(user);
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(Converter.getUserDto(user));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<User>> delete(@PathVariable int id) {
+    public ResponseEntity<List<UserDto>> delete(@PathVariable int id) {
 
         if (userService.get(id).isPresent()) {
             userService.delete(id);
-            return ResponseEntity.ok().body(userService.getAll());
+            return ResponseEntity.ok().body(userService.getAll().stream()
+                    .map(Converter::getUserDto).toList());
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -91,7 +94,7 @@ public class AdminController {
             User user = new User();
             Converter.getUser(user, userDto);
             userService.update(user, id);
-            return ResponseEntity.ok().body(userService.get(id).get());
+            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

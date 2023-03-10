@@ -31,10 +31,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getOne(@PathVariable final int id) {
+    public ResponseEntity<UserDto> getOne(@PathVariable final int id) {
 
         if (userService.get(id).isPresent()) {
-            return ResponseEntity.ok().body(userService.get(id).get());
+            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -67,7 +67,7 @@ public class UserController {
             User user = new User();
             Converter.getUser(user, userDto);
             userService.update(user, authUser.id());
-            return ResponseEntity.ok().body(userService.get(authUser.id()).get());
+            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(authUser.id()).get()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

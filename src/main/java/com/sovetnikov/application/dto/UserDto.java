@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class UserDto {
 
+    private int id;
     @NotBlank(message = "Введите имя")
     @Size(min = 2, max = 100, message = "Должно быть больше 2 и меньше 100 символов")
     private String name;
@@ -23,7 +24,8 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String name, String email, String phoneNumber) {
+    public UserDto(int id, String name, String email, String phoneNumber) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -51,5 +53,13 @@ public class UserDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
