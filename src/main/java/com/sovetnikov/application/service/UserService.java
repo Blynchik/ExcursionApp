@@ -1,6 +1,7 @@
 package com.sovetnikov.application.service;
 
 import com.sovetnikov.application.config.SecurityConfig;
+import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class UserService {
     @Transactional
     public void create(User user){
         user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setRole(Role.ROLE_USER);
         userRepository.save(user);
     }
 
@@ -39,6 +41,8 @@ public class UserService {
     @Transactional
     public void update(User updatedUser, int id) {
         updatedUser.setRegisteredAt(userRepository.getReferenceById(id).getRegisteredAt());
+        updatedUser.setPassword(userRepository.getReferenceById(id).getPassword());
+        updatedUser.setRole(userRepository.getReferenceById(id).getRole());
         updatedUser.setId(id);
         userRepository.save(updatedUser);
     }
@@ -54,5 +58,10 @@ public class UserService {
 
     public Optional<User> getByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    @Transactional
+    public void changeAuthority(int id, Role role){
+        userRepository.getReferenceById(id).setRole(role);
     }
 }

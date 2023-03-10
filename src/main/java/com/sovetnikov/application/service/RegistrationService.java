@@ -1,6 +1,7 @@
 package com.sovetnikov.application.service;
 
 import com.sovetnikov.application.config.SecurityConfig;
+import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RegistrationService {
     @Transactional
     public void register(User user){
         user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setRole(Role.ROLE_USER);
         userRepository.save(user);
     }
 }
