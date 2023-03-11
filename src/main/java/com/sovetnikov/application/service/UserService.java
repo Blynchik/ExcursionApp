@@ -64,4 +64,9 @@ public class UserService {
     public void changeAuthority(int id, Role role){
         userRepository.getReferenceById(id).setRole(role);
     }
+
+    @Transactional
+    public void changePassword(int id, String password){
+        userRepository.getReferenceById(id).setPassword(SecurityConfig.PASSWORD_ENCODER.encode(password));
+    }
 }

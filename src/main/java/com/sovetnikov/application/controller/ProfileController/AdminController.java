@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import com.sovetnikov.application.util.Converter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -63,6 +62,7 @@ public class AdminController {
         Converter.getUser(user, userDto);
         user.setPassword(password);
         userService.create(user);
+
         return ResponseEntity.ok().body(Converter.getUserDto(user));
     }
 
@@ -80,8 +80,10 @@ public class AdminController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
-                                         @RequestBody @Valid UserDto userDto,
-                                         BindingResult bindingResult) {
+                                         @Valid @RequestBody UserDto userDto,
+                                         BindingResult bindingResult,
+                                         @RequestParam(required = false) String password,
+                                         @RequestParam(required = false) Role role) {
 
         userValidator.validate(userDto, bindingResult);
 
@@ -94,19 +96,16 @@ public class AdminController {
             User user = new User();
             Converter.getUser(user, userDto);
             userService.update(user, id);
+
+            if(password!=null &&!password.isEmpty() && !password.isBlank()){
+                userService.changePassword(id, password);
+            }
+
+            if(role!=null && !role.name().isBlank() && !role.name().isEmpty()){
+                userService.changeAuthority(id, role);
+            }
+
             return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @PatchMapping("/{id}/authority")
-    public ResponseEntity<HttpStatus> changeAuthorities(@PathVariable int id,
-                                                    @RequestParam Role role) {
-
-        if (userService.get(id).isPresent()) {
-            userService.changeAuthority(id,role);
-            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

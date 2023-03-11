@@ -6,7 +6,7 @@ import com.sovetnikov.application.model.User;
 public class Converter {
 
     public static UserDto getUserDto(User user){
-        return new UserDto(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber());
+        return new UserDto(user.getName(), user.getEmail(), user.getPhoneNumber());
     }
 
     public static void getUser(User user, UserDto userDto){

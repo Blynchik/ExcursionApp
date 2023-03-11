@@ -2,6 +2,7 @@ package com.sovetnikov.application.controller.ProfileController;
 
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.AuthUser;
+import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
@@ -54,7 +55,9 @@ public class UserController {
     @PatchMapping()
     public ResponseEntity<Object> update(@AuthenticationPrincipal AuthUser authUser,
                                          @RequestBody @Valid UserDto userDto,
-                                         BindingResult bindingResult) {
+                                         BindingResult bindingResult,
+                                         @RequestParam(required = false) String password,
+                                         @RequestParam(required = false) Role role) {
 
         userValidator.validate(userDto, bindingResult);
 
@@ -67,6 +70,15 @@ public class UserController {
             User user = new User();
             Converter.getUser(user, userDto);
             userService.update(user, authUser.id());
+
+            if(password!=null &&!password.isEmpty() && !password.isBlank()){
+                userService.changePassword(authUser.id(), password);
+            }
+
+            if(role!=null && !role.name().isBlank() && !role.name().isEmpty()){
+                userService.changeAuthority(authUser.id(), role);
+            }
+
             return ResponseEntity.ok().body(Converter.getUserDto(userService.get(authUser.id()).get()));
         }
 
