@@ -6,7 +6,7 @@ import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
-import com.sovetnikov.application.util.UserUtils.ErrorList;
+import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

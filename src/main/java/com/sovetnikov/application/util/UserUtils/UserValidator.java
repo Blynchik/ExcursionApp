@@ -30,7 +30,6 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserDto user = (UserDto)target;
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (userService.getByEmail(user.getEmail()).isPresent()){
             errors.rejectValue("email", "", "Электронная почта уже используется");
