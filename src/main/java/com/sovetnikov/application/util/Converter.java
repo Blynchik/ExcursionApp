@@ -38,14 +38,16 @@ public class Converter {
     }
 
     public static CommentDto getCommentDto(Comment comment){
-        return new CommentDto(comment.getMessage(),comment.getUser(), comment.getExcursion());
+        return new CommentDto(comment.getMessage(),
+                Converter.getUserDto(comment.getUser()),
+                Converter.getExcursionDto(comment.getExcursion()));
     }
 
     public static Comment getComment(CommentDto commentDto){
         Comment comment = new Comment();
         comment.setMessage(commentDto.getMessage());
-        comment.setUser(commentDto.getUser());
-        comment.setExcursion(commentDto.getExcursion());
+        comment.setUser(Converter.getUser(commentDto.getUserDto()));
+        comment.setExcursion(Converter.getExcursion(commentDto.getExcursionDto()));
         return comment;
     }
 }

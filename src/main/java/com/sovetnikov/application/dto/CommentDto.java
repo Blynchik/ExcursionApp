@@ -1,5 +1,6 @@
 package com.sovetnikov.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.User;
 import jakarta.persistence.*;
@@ -15,17 +16,17 @@ public class CommentDto {
     @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
     private String message;
 
-    private User user;
+    private UserDto userDto;
 
-    private Excursion excursion;
+    private ExcursionDto excursionDto;
 
     public CommentDto() {
     }
 
-    public CommentDto(String message, User user, Excursion excursion) {
+    public CommentDto(String message, UserDto userDto, ExcursionDto excursionDto) {
         this.message = message;
-        this.user = user;
-        this.excursion = excursion;
+        this.userDto = userDto;
+        this.excursionDto = excursionDto;
     }
 
     public String getMessage() {
@@ -36,19 +37,19 @@ public class CommentDto {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public UserDto getUserDto() {
+        return userDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 
-    public Excursion getExcursion() {
-        return excursion;
+    public ExcursionDto getExcursionDto() {
+        return excursionDto;
     }
 
-    public void setExcursion(Excursion excursion) {
-        this.excursion = excursion;
+    public void setExcursionDto(ExcursionDto excursionDto) {
+        this.excursionDto = excursionDto;
     }
 }
