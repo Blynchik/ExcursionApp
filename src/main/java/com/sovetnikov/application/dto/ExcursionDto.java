@@ -1,5 +1,6 @@
 package com.sovetnikov.application.dto;
 
+import com.sovetnikov.application.model.Comment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -27,6 +28,8 @@ public class ExcursionDto {
     private int price;
 
     private List<UserDto> users;
+
+    private List<CommentDto> comments;
 
     public ExcursionDto(String name, int price) {
         this.name = name;
@@ -71,5 +74,13 @@ public class ExcursionDto {
 
     public void setUsers(List<UserDto> users) {
         this.users = users;
+    }
+
+    public List<CommentDto> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDto> comments) {
+        this.comments = comments;
     }
 }

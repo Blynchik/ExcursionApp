@@ -54,6 +54,9 @@ public class User {
     )
     private List<Excursion> excursions;
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
+
     public User() {
     }
 
@@ -125,5 +128,13 @@ public class User {
 
     public void setExcursions(List<Excursion> excursions) {
         this.excursions = excursions;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

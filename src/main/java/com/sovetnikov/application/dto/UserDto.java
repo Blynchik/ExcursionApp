@@ -23,6 +23,8 @@ public class UserDto {
 
     private List<ExcursionDto> excursions;
 
+    private List<CommentDto> comments;
+
     public UserDto() {
     }
 
@@ -62,5 +64,13 @@ public class UserDto {
 
     public void setExcursions(List<ExcursionDto> excursions) {
         this.excursions = excursions;
+    }
+
+    public List<CommentDto> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDto> comments) {
+        this.comments = comments;
     }
 }
