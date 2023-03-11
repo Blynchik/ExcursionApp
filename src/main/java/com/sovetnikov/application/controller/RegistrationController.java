@@ -3,7 +3,7 @@ package com.sovetnikov.application.controller;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.RegistrationService;
-import com.sovetnikov.application.util.UserUtils.Converter;
+import com.sovetnikov.application.util.Converter;
 import com.sovetnikov.application.util.UserUtils.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
 import jakarta.validation.Valid;

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import com.sovetnikov.application.util.UserUtils.Converter;
+import com.sovetnikov.application.util.Converter;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class AdminProfileController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getOne(@PathVariable final int id) {
+    public ResponseEntity<UserDto> getOne(@PathVariable int id) {
 
         if (userService.get(id).isPresent()) {
             return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
