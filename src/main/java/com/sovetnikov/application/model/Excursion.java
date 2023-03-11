@@ -1,0 +1,83 @@
+package com.sovetnikov.application.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "excursion")
+public class Excursion {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "name")
+    @NotBlank(message = "Введите название экскурсии")
+    @Size(min = 2, max = 100, message = "Название должно быть больше 2 и меньше 100 символов")
+    private String name;
+
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private LocalDate date;
+
+    @Column(name = "description")
+    @Size(max = 300, message = "Описание должно быть не более 300 знаков")
+    private String description;
+
+    @Column(name = "price")
+    @Positive(message = "Должно быть не отрицательным")
+    private int price;
+
+    public Excursion() {
+    }
+
+    public Excursion(String name, int price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+}

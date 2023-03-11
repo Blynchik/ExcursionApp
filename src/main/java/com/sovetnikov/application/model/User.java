@@ -37,8 +37,8 @@ public class User {
     private Date registeredAt = new Date();
 
     @Column(name = "password", nullable = false)
-    @NotBlank
-    @Size(max = 256)
+    @NotBlank(message = "Введите пароль")
+    @Size(min = 1, max = 256, message = "Пароль должен быть меньше 256 знаков")
     private String password;
 
     @Column(name = "role")
