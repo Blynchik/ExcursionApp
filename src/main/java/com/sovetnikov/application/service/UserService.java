@@ -69,4 +69,8 @@ public class UserService {
     public void changePassword(int id, String password){
         userRepository.getReferenceById(id).setPassword(SecurityConfig.PASSWORD_ENCODER.encode(password));
     }
+
+    public List<User> getByNameLike(String query){
+        return userRepository.findByNameStartingWithIgnoreCase(query);
+    }
 }

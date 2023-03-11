@@ -110,4 +110,11 @@ public class AdminController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @GetMapping("/byName")
+    public ResponseEntity<List<UserDto>> getByName(@RequestParam String query) {
+        return ResponseEntity.ok().body(userService.getByNameLike(query).stream()
+                .map(Converter::getUserDto).toList());
+    }
+
 }
