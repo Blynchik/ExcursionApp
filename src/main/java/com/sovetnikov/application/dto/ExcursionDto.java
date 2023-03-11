@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ExcursionDto {
 
@@ -24,6 +25,8 @@ public class ExcursionDto {
 
     @Min(value = 0, message = "Не должно быть отрицательным")
     private int price;
+
+    private List<UserDto> users;
 
     public ExcursionDto(String name, int price) {
         this.name = name;
@@ -60,5 +63,13 @@ public class ExcursionDto {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public List<UserDto> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserDto> users) {
+        this.users = users;
     }
 }

@@ -5,3 +5,8 @@ values ('User', 'user@yandex.ru', '9006005040', '{noop}password', 'ROLE_USER'),
 insert into excursion(name, date, description, price)
 values ('Памуккале', current_date + 10, '', '450'),
        ('Мира', current_date + 13, '', '350');
+
+insert into users_excursion(users_id, excursion_id)
+values (1, 1),
+       (1, 2),
+       (2, 1);

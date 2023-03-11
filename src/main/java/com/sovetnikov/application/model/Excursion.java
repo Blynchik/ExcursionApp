@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "excursion")
@@ -33,6 +34,9 @@ public class Excursion {
     @Column(name = "price")
     @Min(value = 0, message = "Не должно быть отрицательным")
     private int price;
+
+    @ManyToMany(mappedBy = "excursions")
+    private List<User> users;
 
     public Excursion() {
     }
@@ -80,5 +84,13 @@ public class Excursion {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

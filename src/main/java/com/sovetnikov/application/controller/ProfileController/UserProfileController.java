@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.ProfileController;
 
+import com.sovetnikov.application.dto.ExcursionDto;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.AuthUser;
 import com.sovetnikov.application.model.Role;

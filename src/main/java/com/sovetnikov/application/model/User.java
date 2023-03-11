@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -44,6 +45,14 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "users_excursion",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "excursion_id")
+    )
+    private List<Excursion> excursions;
 
     public User() {
     }
@@ -108,5 +117,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Excursion> getExcursions() {
+        return excursions;
+    }
+
+    public void setExcursions(List<Excursion> excursions) {
+        this.excursions = excursions;
     }
 }

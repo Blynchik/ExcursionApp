@@ -34,7 +34,13 @@ public class AdminProfileController {
     public ResponseEntity<UserDto> getOne(@PathVariable int id) {
 
         if (userService.get(id).isPresent()) {
-            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
+
+            UserDto userDto = Converter.getUserDto(userService.get(id).get());
+
+            userDto.setExcursions(userService.getWithExcursions(id).stream()
+                    .map(Converter::getExcursionDto).toList());
+
+            return ResponseEntity.ok().body(userDto);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -51,4 +51,7 @@ public class ExcursionService {
         return excursionRepository.findByNameStartingWithIgnoreCase(query);
     }
 
+    public List<User> getWithUsers(int id) {
+        return excursionRepository.getWithUsers(id).get().getUsers();
+    }
 }

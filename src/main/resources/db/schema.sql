@@ -1,3 +1,4 @@
+drop table if exists users_excursion;
 drop table if exists users;
 drop table if exists excursion;
 
@@ -19,5 +20,11 @@ create table excursion
     date        date,
     description varchar(300),
     price       int check ( price >= 0 )
+);
+
+create table users_excursion(
+    users_id int references users(id),
+    excursion_id int references excursion(id),
+    primary key(users_id, excursion_id)
 );
 

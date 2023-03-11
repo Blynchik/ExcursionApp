@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public class UserDto {
     @NotBlank(message = "Введите имя")
     @Size(min = 2, max = 100, message = "Должно быть больше 2 и меньше 100 символов")
@@ -18,6 +20,8 @@ public class UserDto {
     @Size(min = 10, max = 11, message = "Введите номер телефона без 8")
     @Pattern(regexp = "\\d{10}", message = "Номер телефона должен состоять из 10 цифр без 8")
     private String phoneNumber;
+
+    private List<ExcursionDto> excursions;
 
     public UserDto() {
     }
@@ -50,5 +54,13 @@ public class UserDto {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public List<ExcursionDto> getExcursions() {
+        return excursions;
+    }
+
+    public void setExcursions(List<ExcursionDto> excursions) {
+        this.excursions = excursions;
     }
 }

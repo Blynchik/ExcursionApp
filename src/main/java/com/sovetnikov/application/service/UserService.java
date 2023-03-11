@@ -1,6 +1,7 @@
 package com.sovetnikov.application.service;
 
 import com.sovetnikov.application.config.SecurityConfig;
+import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,5 +73,9 @@ public class UserService {
 
     public List<User> getByNameLike(String query){
         return userRepository.findByNameStartingWithIgnoreCase(query);
+    }
+
+    public List<Excursion> getWithExcursions(int id) {
+        return userRepository.getWithExcursions(id).get().getExcursions();
     }
 }

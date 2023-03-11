@@ -37,7 +37,12 @@ public class AdminExcursionController {
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id){
 
         if(excursionService.get(id).isPresent()){
-            return ResponseEntity.ok().body(Converter.getExcursionDto(excursionService.get(id).get()));
+            ExcursionDto excursionDto = Converter.getExcursionDto(excursionService.get(id).get());
+
+            excursionDto.setUsers(excursionService.getWithUsers(id).stream()
+                    .map(Converter::getUserDto).toList());
+
+            return ResponseEntity.ok().body(excursionDto);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
