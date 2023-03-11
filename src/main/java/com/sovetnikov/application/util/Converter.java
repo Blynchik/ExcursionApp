@@ -1,7 +1,9 @@
 package com.sovetnikov.application.util;
 
+import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.dto.ExcursionDto;
 import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.User;
 
@@ -33,5 +35,17 @@ public class Converter {
         excursion.setDate(excursionDto.getDate());
         excursion.setDescription(excursionDto.getDescription());
         return excursion;
+    }
+
+    public static CommentDto getCommentDto(Comment comment){
+        return new CommentDto(comment.getMessage(),comment.getUser(), comment.getExcursion());
+    }
+
+    public static Comment getComment(CommentDto commentDto){
+        Comment comment = new Comment();
+        comment.setMessage(commentDto.getMessage());
+        comment.setUser(commentDto.getUser());
+        comment.setExcursion(commentDto.getExcursion());
+        return comment;
     }
 }

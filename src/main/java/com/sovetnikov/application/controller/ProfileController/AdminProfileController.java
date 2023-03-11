@@ -3,6 +3,7 @@ package com.sovetnikov.application.controller.ProfileController;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
+import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
