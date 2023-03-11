@@ -1,6 +1,7 @@
 package com.sovetnikov.application.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -30,7 +31,7 @@ public class Excursion {
     private String description;
 
     @Column(name = "price")
-    @Positive(message = "Должно быть не отрицательным")
+    @Min(value = 0, message = "Не должно быть отрицательным")
     private int price;
 
     public Excursion() {

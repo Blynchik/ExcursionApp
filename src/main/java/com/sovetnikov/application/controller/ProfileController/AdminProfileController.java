@@ -58,8 +58,7 @@ public class AdminProfileController {
                     .body(ErrorList.getList(bindingResult));
         }
 
-        User user = new User();
-        Converter.getUser(user, userDto);
+        User user = Converter.getUser(userDto);
         user.setPassword(password);
         userService.create(user);
 
@@ -93,8 +92,7 @@ public class AdminProfileController {
         }
 
         if (userService.get(id).isPresent()) {
-            User user = new User();
-            Converter.getUser(user, userDto);
+            User user = Converter.getUser(userDto);
             userService.update(user, id);
 
             if(password!=null &&!password.isEmpty() && !password.isBlank()){
@@ -111,7 +109,7 @@ public class AdminProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/byName")
+    @GetMapping("/findByName")
     public ResponseEntity<List<UserDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(userService.getByNameLike(query).stream()
                 .map(Converter::getUserDto).toList());

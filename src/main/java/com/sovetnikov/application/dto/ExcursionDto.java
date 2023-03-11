@@ -3,6 +3,7 @@ package com.sovetnikov.application.dto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -21,11 +22,8 @@ public class ExcursionDto {
     @Size(max = 300, message = "Описание должно быть не более 300 знаков")
     private String description;
 
-    @Positive(message = "Должно быть не отрицательным")
+    @Min(value = 0, message = "Не должно быть отрицательным")
     private int price;
-
-    public ExcursionDto() {
-    }
 
     public ExcursionDto(String name, int price) {
         this.name = name;

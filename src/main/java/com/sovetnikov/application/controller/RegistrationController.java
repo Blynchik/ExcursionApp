@@ -38,8 +38,7 @@ public class RegistrationController {
                     .body(ErrorList.getList(bindingResult));
         }
 
-        User user = new User();
-        Converter.getUser(user, userDto);
+        User user = Converter.getUser(userDto);
         user.setPassword(password);
         registrationService.register(user);
         return ResponseEntity.ok().body(Converter.getUserDto(user));

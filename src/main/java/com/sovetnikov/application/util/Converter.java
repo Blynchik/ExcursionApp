@@ -11,10 +11,12 @@ public class Converter {
         return new UserDto(user.getName(), user.getEmail(), user.getPhoneNumber());
     }
 
-    public static void getUser(User user, UserDto userDto){
+    public static User getUser(UserDto userDto){
+        User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail().toLowerCase());
         user.setPhoneNumber(userDto.getPhoneNumber());
+        return user;
     }
 
     public static  ExcursionDto getExcursionDto(Excursion excursion){
@@ -24,10 +26,12 @@ public class Converter {
         return excursionDto;
     }
 
-    public static void getExcursion(Excursion excursion, ExcursionDto excursionDto){
+    public static Excursion getExcursion(ExcursionDto excursionDto){
+        Excursion excursion = new Excursion();
         excursion.setName(excursionDto.getName());
         excursion.setPrice(excursionDto.getPrice());
         excursion.setDate(excursionDto.getDate());
         excursion.setDescription(excursionDto.getDescription());
+        return excursion;
     }
 }
