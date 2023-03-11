@@ -16,6 +16,7 @@ public class UserDto {
     @Size(max = 100, message = "Должно быть меньше 100 символов")
     @Email(message = "Введите корректную электронную почту")
     private String email;
+
     @NotBlank(message = "Введите номер телефона")
     @Size(min = 10, max = 11, message = "Введите номер телефона без 8")
     @Pattern(regexp = "\\d{10}", message = "Номер телефона должен состоять из 10 цифр без 8")
