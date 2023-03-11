@@ -1,4 +1,4 @@
-package com.sovetnikov.application.util;
+package com.sovetnikov.application.util.UserUtils;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;

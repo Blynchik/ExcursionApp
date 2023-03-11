@@ -1,4 +1,4 @@
-package com.sovetnikov.application.util;
+package com.sovetnikov.application.util.UserUtils;
 
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.User;

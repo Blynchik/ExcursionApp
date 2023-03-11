@@ -5,7 +5,6 @@ import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

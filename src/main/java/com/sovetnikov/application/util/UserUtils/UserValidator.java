@@ -1,4 +1,4 @@
-package com.sovetnikov.application.util;
+package com.sovetnikov.application.util.UserUtils;
 
 import com.sovetnikov.application.config.SecurityConfig;
 import com.sovetnikov.application.dto.UserDto;
