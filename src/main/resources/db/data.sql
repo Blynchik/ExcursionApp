@@ -12,5 +12,5 @@ values (1, 1),
        (2, 1);
 
 insert into comment(message, created_at, users_id, excursion_id)
-values ('Понравилось', current_date + 10, 1, 1),
-       ('Не понравилось', current_date + 13, 2, 2);
+values ('Понравилось', current_date + 10, 1, 2),
+       ('Не понравилось', current_date + 13, 2, 1);

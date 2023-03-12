@@ -1,5 +1,6 @@
 package com.sovetnikov.application.repository;
 
+import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

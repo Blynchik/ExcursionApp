@@ -23,10 +23,10 @@ public class Comment {
     @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
     private String message;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     @ManyToOne
     @JoinColumn(name = "users_id", referencedColumnName = "id")

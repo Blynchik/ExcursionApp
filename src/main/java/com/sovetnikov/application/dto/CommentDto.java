@@ -20,6 +20,8 @@ public class CommentDto {
 
     private ExcursionDto excursionDto;
 
+    private Date createdAt;
+
     public CommentDto() {
     }
 
@@ -51,5 +53,13 @@ public class CommentDto {
 
     public void setExcursionDto(ExcursionDto excursionDto) {
         this.excursionDto = excursionDto;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

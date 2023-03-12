@@ -29,11 +29,16 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-    public List<Comment> getAll(){
-        return commentRepository.findAll();
+    public List<Comment> getUserComment(int userId){
+        return commentRepository.getUserComments(userId);
     }
 
-    @Transactional public void delete(int id){
+    public List<Comment> getExcursionComment(int excursionId){
+        return  commentRepository.getExcursionComments(excursionId);
+    }
+
+    @Transactional
+    public void delete(int id){
         commentRepository.deleteById(id);
     }
 

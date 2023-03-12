@@ -38,9 +38,13 @@ public class Converter {
     }
 
     public static CommentDto getCommentDto(Comment comment){
-        return new CommentDto(comment.getMessage(),
+        CommentDto commentDto =  new CommentDto(comment.getMessage(),
                 Converter.getUserDto(comment.getUser()),
                 Converter.getExcursionDto(comment.getExcursion()));
+
+        commentDto.setCreatedAt(comment.getCreatedAt());
+
+        return commentDto;
     }
 
     public static Comment getComment(CommentDto commentDto){
