@@ -31,6 +31,8 @@ public class ExcursionDto {
 
     private List<CommentDto> comments;
 
+    private List<LikeDto> likes;
+
     public ExcursionDto(String name, int price) {
         this.name = name;
         this.price = price;
@@ -82,5 +84,13 @@ public class ExcursionDto {
 
     public void setComments(List<CommentDto> comments) {
         this.comments = comments;
+    }
+
+    public List<LikeDto> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LikeDto> likes) {
+        this.likes = likes;
     }
 }

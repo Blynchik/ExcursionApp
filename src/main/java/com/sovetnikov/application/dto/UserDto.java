@@ -26,6 +26,8 @@ public class UserDto {
 
     private List<CommentDto> comments;
 
+    private List<LikeDto> like;
+
     public UserDto() {
     }
 
@@ -73,5 +75,13 @@ public class UserDto {
 
     public void setComments(List<CommentDto> comments) {
         this.comments = comments;
+    }
+
+    public List<LikeDto> getLike() {
+        return like;
+    }
+
+    public void setLike(List<LikeDto> like) {
+        this.like = like;
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "likes")
@@ -14,11 +15,11 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "excursion_id", referencedColumnName = "id")
     private Excursion excursion;
 
@@ -52,5 +53,18 @@ public class Like {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Like like = (Like) o;
+        return id == like.id && Objects.equals(user, like.user) && Objects.equals(excursion, like.excursion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, excursion);
     }
 }
