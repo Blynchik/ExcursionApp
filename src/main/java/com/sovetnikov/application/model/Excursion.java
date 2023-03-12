@@ -41,6 +41,9 @@ public class Excursion {
     @OneToMany(mappedBy = "excursion")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "excursion")
+    private List<Like> likes;
+
     public Excursion() {
     }
 
@@ -103,5 +106,13 @@ public class Excursion {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
     }
 }
