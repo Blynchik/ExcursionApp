@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/like")
+@RequestMapping("/api/admin/user")
 public class AdminLikeController {
 
     private final LikeService likeService;
@@ -38,46 +38,13 @@ public class AdminLikeController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}/like")
     public ResponseEntity<List<LikeDto>> getAllUserLikes(@PathVariable int id) {
         return ResponseEntity.ok().body(likeService.getUserLikes(id).stream()
                 .map(Converter::getLikeDto).toList());
     }
 
-    @GetMapping("/excursion/{id}")
-    public ResponseEntity<List<LikeDto>> getAllExcursionLikes(@PathVariable int id) {
-        return ResponseEntity.ok().body(likeService.getExcursionLikes(id).stream()
-                .map(Converter::getLikeDto).toList());
-    }
-
-    @PostMapping("/excursion/{id}")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id) {
-
-
-        if (excursionService.get(id).isPresent()
-                && userService.get(authUser.id()).isPresent()) {
-
-            if (likeService.getByExcursionAndUser(
-                            excursionService.get(id).get(),
-                            userService.get(authUser.id()).get())
-                    .isPresent()) {
-
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new RuntimeException("Уже существует").getMessage());
-            }
-
-            Like like = new Like(userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
-
-            likeService.create(like);
-
-            return ResponseEntity.ok().body(Converter.getLikeDto(like));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/like/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
 
         if (likeService.get(id).isPresent()) {

@@ -40,34 +40,6 @@ public class UserCommentController {
                 .map(Converter::getCommentDto).toList());
     }
 
-    @GetMapping("/excursion/{id}")
-    public ResponseEntity<List<CommentDto>> getAllExcursionComments(@PathVariable int id) {
-        return ResponseEntity.ok().body(commentService.getExcursionComment(id).stream()
-                .map(Converter::getCommentDto).toList());
-    }
-
-    @PostMapping("/excursion/{id}")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id,
-                                         @RequestParam
-                                         @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
-                                         @NotBlank(message = "Комментарий не должен быть пустым")
-                                         String message) {
-
-
-        if (excursionService.get(id).isPresent() && userService.get(authUser.id()).isPresent()) {
-
-            Comment comment = new Comment(message,
-                    userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
-
-            commentService.create(comment);
-
-            return ResponseEntity.ok().body(Converter.getCommentDto(comment));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {

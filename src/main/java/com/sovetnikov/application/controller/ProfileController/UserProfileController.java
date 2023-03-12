@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserProfileController {
+public class UserProfileController{
 
     private final UserService userService;
     private final UserValidator userValidator;

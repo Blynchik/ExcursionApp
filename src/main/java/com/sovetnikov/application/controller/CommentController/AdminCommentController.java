@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/comment")
+@RequestMapping("/api/admin/user")
 public class AdminCommentController {
 
     private final CommentService commentService;
@@ -38,7 +38,7 @@ public class AdminCommentController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/comment/{id}")
     public ResponseEntity<CommentDto> getOne(@PathVariable int id) {
 
         if (commentService.get(id).isPresent()) {
@@ -48,41 +48,13 @@ public class AdminCommentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@PathVariable int id) {
         return ResponseEntity.ok().body(commentService.getUserComment(id).stream()
                 .map(Converter::getCommentDto).toList());
     }
 
-    @GetMapping("/excursion/{id}")
-    public ResponseEntity<List<CommentDto>> getAllExcursionComments(@PathVariable int id) {
-        return ResponseEntity.ok().body(commentService.getExcursionComment(id).stream()
-                .map(Converter::getCommentDto).toList());
-    }
-
-    @PostMapping("/excursion/{id}")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id,
-                                         @RequestParam
-                                         @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
-                                         @NotBlank(message = "Комментарий не должен быть пустым")
-                                         String message) {
-
-
-        if (excursionService.get(id).isPresent() && userService.get(authUser.id()).isPresent()) {
-
-            Comment comment = new Comment(message,
-                    userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
-
-            commentService.create(comment);
-
-            return ResponseEntity.ok().body(Converter.getCommentDto(comment));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/comment/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id){
 
         if(commentService.get(id).isPresent()){

@@ -19,7 +19,7 @@ import com.sovetnikov.application.util.Converter;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/user")
 public class AdminProfileController {
 
     private final UserService userService;
