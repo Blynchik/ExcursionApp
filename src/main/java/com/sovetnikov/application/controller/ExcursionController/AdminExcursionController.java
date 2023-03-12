@@ -1,9 +1,9 @@
 package com.sovetnikov.application.controller.ExcursionController;
 
 import com.sovetnikov.application.dto.CommentDto;
-import com.sovetnikov.application.dto.ExcursionDto;
+import com.sovetnikov.application.dto.ExcursionDto.BaseExcursionDto;
+import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
 import com.sovetnikov.application.dto.LikeDto;
-import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.*;
 import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
@@ -62,14 +62,8 @@ public class AdminExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<ExcursionDto>> getAll(){
-        return ResponseEntity.ok().body(excursionService.getAll().stream()
-                .map(Converter::getExcursionDto).toList());
-    }
-
     @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody ExcursionDto excursionDto,
+    public ResponseEntity<Object> createExcursion(@Valid @RequestBody BaseExcursionDto excursionDto,
                                          BindingResult bindingResult){
 
         excursionValidator.validate(excursionDto,bindingResult);
@@ -99,7 +93,7 @@ public class AdminExcursionController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
-                                         @Valid @RequestBody ExcursionDto excursionDto,
+                                         @Valid @RequestBody BaseExcursionDto excursionDto,
                                          BindingResult bindingResult){
 
         excursionValidator.validate(excursionDto, bindingResult);
@@ -116,73 +110,6 @@ public class AdminExcursionController {
             return ResponseEntity.ok().body(Converter.getExcursionDto(excursionService.get(id).get()));
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @GetMapping("/findByName")
-    public ResponseEntity<List<ExcursionDto>> getByName(@RequestParam String query) {
-        return ResponseEntity.ok().body(excursionService.getByNameLike(query).stream()
-                .map(Converter::getExcursionDto).toList());
-    }
-
-    @GetMapping("/{id}/comment")
-    public ResponseEntity<List<CommentDto>> getAllExcursionComments(@PathVariable int id) {
-        return ResponseEntity.ok().body(commentService.getExcursionComment(id).stream()
-                .map(Converter::getCommentDto).toList());
-    }
-
-    @PostMapping("/{id}/comment")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id,
-                                         @RequestParam
-                                         @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
-                                         @NotBlank(message = "Комментарий не должен быть пустым")
-                                         String message) {
-
-
-        if (excursionService.get(id).isPresent() && userService.get(authUser.id()).isPresent()) {
-
-            Comment comment = new Comment(message,
-                    userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
-
-            commentService.create(comment);
-
-            return ResponseEntity.ok().body(Converter.getCommentDto(comment));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @GetMapping("/{id}/like")
-    public ResponseEntity<List<LikeDto>> getAllExcursionLikes(@PathVariable int id) {
-        return ResponseEntity.ok().body(likeService.getExcursionLikes(id).stream()
-                .map(Converter::getLikeDto).toList());
-    }
-
-    @PostMapping("/{id}/like")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id) {
-
-
-        if (excursionService.get(id).isPresent()
-                && userService.get(authUser.id()).isPresent()) {
-
-            if (likeService.getByExcursionAndUser(
-                            excursionService.get(id).get(),
-                            userService.get(authUser.id()).get())
-                    .isPresent()) {
-
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new RuntimeException("Уже существует").getMessage());
-            }
-
-            Like like = new Like(userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
-
-            likeService.create(like);
-
-            return ResponseEntity.ok().body(Converter.getLikeDto(like));
-        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

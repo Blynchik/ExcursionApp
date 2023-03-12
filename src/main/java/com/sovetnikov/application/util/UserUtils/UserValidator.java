@@ -1,7 +1,6 @@
 package com.sovetnikov.application.util.UserUtils;
 
-import com.sovetnikov.application.dto.BaseUserDto;
-import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

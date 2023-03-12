@@ -1,4 +1,8 @@
-package com.sovetnikov.application.dto;
+package com.sovetnikov.application.dto.UserDto;
+
+import com.sovetnikov.application.dto.CommentDto;
+import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
+import com.sovetnikov.application.dto.LikeDto;
 
 import java.util.List;
 

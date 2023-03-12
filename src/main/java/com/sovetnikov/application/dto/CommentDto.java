@@ -1,5 +1,7 @@
 package com.sovetnikov.application.dto;
 
+import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
+import com.sovetnikov.application.dto.UserDto.UserDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

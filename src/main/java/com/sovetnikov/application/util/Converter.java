@@ -1,6 +1,10 @@
 package com.sovetnikov.application.util;
 
 import com.sovetnikov.application.dto.*;
+import com.sovetnikov.application.dto.ExcursionDto.BaseExcursionDto;
+import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
+import com.sovetnikov.application.dto.UserDto.BaseUserDto;
+import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
@@ -27,7 +31,7 @@ public class Converter {
         return excursionDto;
     }
 
-    public static Excursion getExcursion(ExcursionDto excursionDto) {
+    public static Excursion getExcursion(BaseExcursionDto excursionDto) {
         Excursion excursion = new Excursion();
         excursion.setName(excursionDto.getName());
         excursion.setPrice(excursionDto.getPrice());

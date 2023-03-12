@@ -1,7 +1,6 @@
 package com.sovetnikov.application.controller;
 
-import com.sovetnikov.application.dto.UserDto;
-import com.sovetnikov.application.dto.BaseUserDto;
+import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.RegistrationService;
 import com.sovetnikov.application.util.Converter;

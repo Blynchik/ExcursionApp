@@ -1,22 +1,13 @@
 package com.sovetnikov.application.controller.CommentController;
 
 import com.sovetnikov.application.dto.CommentDto;
-import com.sovetnikov.application.dto.ExcursionDto;
-import com.sovetnikov.application.model.AuthUser;
-import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
-import com.sovetnikov.application.util.ErrorList;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

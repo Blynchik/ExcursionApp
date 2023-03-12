@@ -1,4 +1,4 @@
-package com.sovetnikov.application.dto;
+package com.sovetnikov.application.dto.ExcursionDto;
 
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -7,9 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.List;
 
-public class ExcursionDto {
+public class BaseExcursionDto {
 
     @NotBlank(message = "Введите название экскурсии")
     @Size(min = 2, max = 100, message = "Название должно быть больше 2 и меньше 100 символов")
@@ -24,13 +23,7 @@ public class ExcursionDto {
     @Min(value = 0, message = "Не должно быть отрицательным")
     private int price;
 
-    private List<UserDto> users;
-
-    private List<CommentDto> comments;
-
-    private List<LikeDto> likes;
-
-    public ExcursionDto(String name, int price) {
+    public BaseExcursionDto(String name, int price) {
         this.name = name;
         this.price = price;
     }
@@ -67,27 +60,4 @@ public class ExcursionDto {
         this.price = price;
     }
 
-    public List<UserDto> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserDto> users) {
-        this.users = users;
-    }
-
-    public List<CommentDto> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<CommentDto> comments) {
-        this.comments = comments;
-    }
-
-    public List<LikeDto> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(List<LikeDto> likes) {
-        this.likes = likes;
-    }
 }

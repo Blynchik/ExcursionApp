@@ -1,7 +1,7 @@
 package com.sovetnikov.application.controller.ProfileController;
 
-import com.sovetnikov.application.dto.BaseUserDto;
-import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.dto.UserDto.BaseUserDto;
+import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.CommentService;

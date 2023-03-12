@@ -1,5 +1,8 @@
 package com.sovetnikov.application.dto;
 
+import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
+import com.sovetnikov.application.dto.UserDto.UserDto;
+
 public class LikeDto {
 
     private UserDto userDto;
