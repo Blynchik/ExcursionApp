@@ -48,9 +48,9 @@ public class AdminExcursionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ExcursionDto> getOne(@PathVariable int id){
+    public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
-        if(excursionService.get(id).isPresent()){
+        if (excursionService.get(id).isPresent()) {
             ExcursionDto excursionDto = Converter.getExcursionDto(excursionService.get(id).get());
 
             excursionDto.setUsers(excursionService.getWithUsers(id).stream()
@@ -64,11 +64,11 @@ public class AdminExcursionController {
 
     @PostMapping()
     public ResponseEntity<Object> createExcursion(@Valid @RequestBody BaseExcursionDto excursionDto,
-                                         BindingResult bindingResult){
+                                                  BindingResult bindingResult) {
 
-        excursionValidator.validate(excursionDto,bindingResult);
+        excursionValidator.validate(excursionDto, bindingResult);
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
@@ -80,9 +80,9 @@ public class AdminExcursionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<ExcursionDto>> delete(@PathVariable int id){
+    public ResponseEntity<List<ExcursionDto>> delete(@PathVariable int id) {
 
-        if (excursionService.get(id).isPresent()){
+        if (excursionService.get(id).isPresent()) {
             excursionService.delete(id);
             return ResponseEntity.ok().body(excursionService.getAll().stream()
                     .map(Converter::getExcursionDto).toList());
@@ -94,11 +94,11 @@ public class AdminExcursionController {
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
                                          @Valid @RequestBody BaseExcursionDto excursionDto,
-                                         BindingResult bindingResult){
+                                         BindingResult bindingResult) {
 
         excursionValidator.validate(excursionDto, bindingResult);
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
@@ -111,5 +111,43 @@ public class AdminExcursionController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PatchMapping("/{id}/clear")
+    public ResponseEntity<HttpStatus> clearExcursionUsers(@PathVariable int id) {
+
+        if (excursionService.get(id).isPresent()) {
+
+            excursionService.clearExcursionUsers(id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{id}/exclusion")
+    public ResponseEntity<HttpStatus> excludeUser(@PathVariable int id,
+                                                  @RequestParam int userId) {
+
+        if (userService.get(userId).isPresent() && excursionService.get(id).isPresent()) {
+            excursionService.deleteFromExcursion(id, userId);
+
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{id}/add")
+    public ResponseEntity<HttpStatus> addUser(@PathVariable int id,
+                                              @RequestParam int userId){
+
+        if(userService.get(userId).isPresent() && excursionService.get(id).isPresent()) {
+            excursionService.addUserToExcursion(id, userId);
+
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }

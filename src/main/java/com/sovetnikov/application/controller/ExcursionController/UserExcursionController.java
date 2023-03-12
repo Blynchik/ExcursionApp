@@ -77,7 +77,7 @@ public class UserExcursionController {
     }
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
+    public ResponseEntity<Object> createComment(@AuthenticationPrincipal AuthUser authUser,
                                          @PathVariable int id,
                                          @RequestParam
                                          @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
@@ -105,7 +105,7 @@ public class UserExcursionController {
     }
 
     @PostMapping("/{id}/like")
-    public ResponseEntity<Object> create(@AuthenticationPrincipal AuthUser authUser,
+    public ResponseEntity<Object> createLike(@AuthenticationPrincipal AuthUser authUser,
                                          @PathVariable int id) {
 
 
