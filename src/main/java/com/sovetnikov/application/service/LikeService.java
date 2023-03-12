@@ -1,12 +1,15 @@
 package com.sovetnikov.application.service;
 
+import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
+import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,10 +23,8 @@ public class LikeService {
     }
 
     @Transactional
-    public void create(Like like) {
-        if (!likeRepository.getUserLikes(like.getId()).contains(like)) {
+    public void create(Like like){
             likeRepository.save(like);
-        }
     }
 
     public List<Like> getUserLikes (int userId){
@@ -37,5 +38,13 @@ public class LikeService {
     @Transactional
     public void delete(int id){
         likeRepository.deleteById(id);
+    }
+
+    public Optional<Like> get(int id){
+        return likeRepository.findById(id);
+    }
+
+    public Optional<Like> getByExcursionAndUser(Excursion excursion, User user){
+        return likeRepository.findByExcursionAndUser(excursion,user);
     }
 }
