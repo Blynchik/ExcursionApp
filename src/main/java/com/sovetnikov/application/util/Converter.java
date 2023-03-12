@@ -1,9 +1,6 @@
 package com.sovetnikov.application.util;
 
-import com.sovetnikov.application.dto.CommentDto;
-import com.sovetnikov.application.dto.ExcursionDto;
-import com.sovetnikov.application.dto.LikeDto;
-import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.dto.*;
 import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
@@ -15,7 +12,7 @@ public class Converter {
         return new UserDto(user.getName(), user.getEmail(), user.getPhoneNumber());
     }
 
-    public static User getUser(UserDto userDto) {
+    public static User getUser(BaseUserDto userDto) {
         User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail().toLowerCase());

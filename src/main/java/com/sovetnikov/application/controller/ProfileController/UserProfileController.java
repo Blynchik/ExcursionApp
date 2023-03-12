@@ -1,9 +1,8 @@
 package com.sovetnikov.application.controller.ProfileController;
 
-import com.sovetnikov.application.dto.ExcursionDto;
+import com.sovetnikov.application.dto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.AuthUser;
-import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
@@ -55,7 +54,7 @@ public class UserProfileController{
 
     @PatchMapping()
     public ResponseEntity<Object> update(@AuthenticationPrincipal AuthUser authUser,
-                                         @RequestBody @Valid UserDto userDto,
+                                         @RequestBody @Valid BaseUserDto userDto,
                                          BindingResult bindingResult,
                                          @RequestParam(required = false) String password) {
 

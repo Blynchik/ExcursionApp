@@ -3,7 +3,6 @@ package com.sovetnikov.application.util.ExcursionUtils;
 import com.sovetnikov.application.dto.ExcursionDto;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.service.ExcursionService;
-import com.sovetnikov.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

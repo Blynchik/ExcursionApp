@@ -1,9 +1,11 @@
 package com.sovetnikov.application.controller.ProfileController;
 
+import com.sovetnikov.application.dto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.CommentService;
+import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
@@ -24,11 +26,18 @@ public class AdminProfileController {
 
     private final UserService userService;
     private final UserValidator userValidator;
+    private final CommentService commentService;
+    private final LikeService likeService;
 
     @Autowired
-    public AdminProfileController(UserService userService, UserValidator userValidator) {
+    public AdminProfileController(UserService userService,
+                                  UserValidator userValidator,
+                                  CommentService commentService,
+                                  LikeService likeService) {
         this.userService = userService;
         this.userValidator = userValidator;
+        this.commentService = commentService;
+        this.likeService = likeService;
     }
 
     @GetMapping("/{id}")
@@ -40,6 +49,12 @@ public class AdminProfileController {
 
             userDto.setExcursions(userService.getWithExcursions(id).stream()
                     .map(Converter::getExcursionDto).toList());
+
+            userDto.setComments(commentService.getUserComment(id).stream()
+                    .map(Converter::getCommentDto).toList());
+
+            userDto.setLike(likeService.getUserLikes(id).stream()
+                    .map(Converter::getLikeDto).toList());
 
             return ResponseEntity.ok().body(userDto);
         }
@@ -54,7 +69,7 @@ public class AdminProfileController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody UserDto userDto,
+    public ResponseEntity<Object> create(@Valid @RequestBody BaseUserDto userDto,
                                          BindingResult bindingResult,
                                          @RequestParam String password) {
 
@@ -86,7 +101,7 @@ public class AdminProfileController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
-                                         @Valid @RequestBody UserDto userDto,
+                                         @Valid @RequestBody BaseUserDto userDto,
                                          BindingResult bindingResult,
                                          @RequestParam(required = false) String password,
                                          @RequestParam(required = false) Role role) {
@@ -115,11 +130,4 @@ public class AdminProfileController {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
-    @GetMapping("/findByName")
-    public ResponseEntity<List<UserDto>> getByName(@RequestParam String query) {
-        return ResponseEntity.ok().body(userService.getByNameLike(query).stream()
-                .map(Converter::getUserDto).toList());
-    }
-
 }

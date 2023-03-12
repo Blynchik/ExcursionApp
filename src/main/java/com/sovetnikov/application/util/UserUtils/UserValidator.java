@@ -1,14 +1,9 @@
 package com.sovetnikov.application.util.UserUtils;
 
-import com.sovetnikov.application.config.SecurityConfig;
+import com.sovetnikov.application.dto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto;
-import com.sovetnikov.application.model.AuthUser;
-import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -24,12 +19,12 @@ public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return UserDto.class.equals(clazz);
+        return BaseUserDto.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        UserDto user = (UserDto)target;
+        BaseUserDto user = (BaseUserDto)target;
 
         if (userService.getByEmail(user.getEmail()).isPresent()){
             errors.rejectValue("email", "", "Электронная почта уже используется");

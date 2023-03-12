@@ -1,6 +1,7 @@
 package com.sovetnikov.application.controller;
 
 import com.sovetnikov.application.dto.UserDto;
+import com.sovetnikov.application.dto.BaseUserDto;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.RegistrationService;
 import com.sovetnikov.application.util.Converter;
@@ -27,7 +28,7 @@ public class RegistrationController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> register(@Valid @RequestBody UserDto userDto,
+    public ResponseEntity<Object> register(@Valid @RequestBody BaseUserDto userDto,
                                            BindingResult bindingResult,
                                            @RequestParam String password) {
 
@@ -41,6 +42,7 @@ public class RegistrationController {
         User user = Converter.getUser(userDto);
         user.setPassword(password);
         registrationService.register(user);
+
         return ResponseEntity.ok().body(Converter.getUserDto(user));
     }
 }
