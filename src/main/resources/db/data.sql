@@ -14,3 +14,8 @@ values (1, 1),
 insert into comment(message, created_at, users_id, excursion_id)
 values ('Понравилось', current_date + 10, 1, 2),
        ('Не понравилось', current_date + 13, 2, 1);
+
+insert into likes(users_id, excursion_id, created_at)
+values (1,1, current_timestamp),
+       (2,1,current_timestamp),
+       (1,2, current_timestamp);
