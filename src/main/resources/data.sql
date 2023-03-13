@@ -3,8 +3,8 @@ values ('User', 'user@yandex.ru', '9006005040', '{noop}password', 'ROLE_USER'),
        ('Admin', 'admin@mail.ru', '9007008060', '{noop}password', 'ROLE_ADMIN');
 
 insert into excursion(name, date, description, price)
-values ('Памуккале', current_timestamp, '', '450'),
-       ('Мира', current_timestamp, '', '350');
+values ('Памуккале', current_date, '', '450'),
+       ('Мира', current_date+1, '', '350');
 
 insert into users_excursion(users_id, excursion_id)
 values (1, 1),
