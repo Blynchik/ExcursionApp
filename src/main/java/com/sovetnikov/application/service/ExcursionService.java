@@ -7,10 +7,12 @@ import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.ExcursionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +39,7 @@ public class ExcursionService {
     }
 
     public List<Excursion> getAll() {
-        return excursionRepository.findAll();
+        return excursionRepository.findAll(Sort.by("date"));
     }
 
     @Transactional
@@ -52,11 +54,15 @@ public class ExcursionService {
     }
 
     public List<Excursion> getByNameLike(String query) {
-        return excursionRepository.findByNameStartingWithIgnoreCase(query);
+        List<Excursion> list =  excursionRepository.findByNameStartingWithIgnoreCase(query);
+        list.sort(Comparator.comparing(Excursion::getName));
+        return list;
     }
 
     public List<User> getWithUsers(int id) {
-        return excursionRepository.getWithUsers(id).get().getUsers();
+        List<User> list = excursionRepository.getWithUsers(id).get().getUsers();
+        list.sort(Comparator.comparing(User::getName));
+        return list;
     }
 
     @Transactional

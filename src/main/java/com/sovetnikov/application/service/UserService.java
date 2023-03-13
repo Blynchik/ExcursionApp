@@ -5,11 +5,15 @@ import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +40,7 @@ public class UserService {
     }
 
     public List<User> getAll() {
-        return userRepository.findAll();
+        return userRepository.findAll(Sort.by("name"));
     }
 
     @Transactional
@@ -72,10 +76,17 @@ public class UserService {
     }
 
     public List<User> getByNameLike(String query){
-        return userRepository.findByNameStartingWithIgnoreCase(query);
+        List<User> list =  userRepository.findByNameStartingWithIgnoreCase(query);
+        list.sort(Comparator.comparing(User::getName));
+        return list;
     }
 
     public List<Excursion> getWithExcursions(int id) {
-        return userRepository.getWithExcursions(id).get().getExcursions();
+        //Hibernate.initialize(userRepository.getReferenceById(id).getExcursions());
+        //так тоже можно было без создания SQL/HQL запросов
+        //это касается всех похожих методов
+        List<Excursion> list =  userRepository.getWithExcursions(id).get().getExcursions();
+        list.sort(Comparator.comparing(Excursion::getDate));
+        return list;
     }
 }

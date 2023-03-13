@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +31,15 @@ public class CommentService {
     }
 
     public List<Comment> getUserComment(int userId){
-        return commentRepository.getUserComments(userId);
+        List<Comment> list = commentRepository.getUserComments(userId);
+        list.sort(Comparator.comparing(Comment::getCreatedAt).reversed());
+        return list;
     }
 
     public List<Comment> getExcursionComment(int excursionId){
-        return  commentRepository.getExcursionComments(excursionId);
+        List<Comment> list = commentRepository.getExcursionComments(excursionId);
+        list.sort(Comparator.comparing(Comment::getCreatedAt).reversed());
+        return list;
     }
 
     @Transactional
