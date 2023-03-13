@@ -63,8 +63,8 @@ public class AdminProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAll() {
-        return ResponseEntity.ok().body(userService.getAll().stream()
+    public ResponseEntity<List<UserDto>> getAll(@RequestParam (defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(userService.getAll(page).stream()
                 .map(Converter::getUserDto).toList());
     }
 
@@ -92,8 +92,7 @@ public class AdminProfileController {
 
         if (userService.get(id).isPresent()) {
             userService.delete(id);
-            return ResponseEntity.ok().body(userService.getAll().stream()
-                    .map(Converter::getUserDto).toList());
+            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -7,7 +7,7 @@ import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.ExcursionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,15 +39,19 @@ public class ExcursionService {
         return excursionRepository.findById(id);
     }
 
-    public List<Excursion> getAll(boolean onlyNext) {
+    public List<Excursion> getAll(int page, boolean onlyNext) {
 
-        List<Excursion> list = excursionRepository.findAll(Sort.by("date"));
+        if (onlyNext) {
 
-        if(onlyNext){
-            list = list.stream().filter(e -> e.getDate().isAfter(LocalDate.now())).toList();
+            List<Excursion> excursions= excursionRepository.findAll( Sort.by("date"))
+                    .stream()
+                    .filter(e -> e.getDate().isAfter(LocalDate.now()))
+                    .toList();
+
+            return new PageImpl<Excursion>(excursions, PageRequest.of(page, 3), excursions.size()).getContent();
         }
 
-        return list;
+        return excursionRepository.findAll(PageRequest.of(page, 3, Sort.by("date"))).getContent();
     }
 
     @Transactional
@@ -62,7 +66,7 @@ public class ExcursionService {
     }
 
     public List<Excursion> getByNameLike(String query) {
-        List<Excursion> list =  excursionRepository.findByNameStartingWithIgnoreCase(query);
+        List<Excursion> list = excursionRepository.findByNameStartingWithIgnoreCase(query);
         list.sort(Comparator.comparing(Excursion::getName));
         return list;
     }
@@ -84,7 +88,7 @@ public class ExcursionService {
     }
 
     @Transactional
-    public void addUserToExcursion(int excursionId, int userId){
+    public void addUserToExcursion(int excursionId, int userId) {
         excursionDao.addUserToExcursion(excursionId, userId);
     }
 }

@@ -84,8 +84,7 @@ public class AdminExcursionController {
 
         if (excursionService.get(id).isPresent()) {
             excursionService.delete(id);
-            return ResponseEntity.ok().body(excursionService.getAll(false).stream()
-                    .map(Converter::getExcursionDto).toList());
+            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

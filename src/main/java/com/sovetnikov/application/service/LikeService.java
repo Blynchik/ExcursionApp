@@ -5,9 +5,12 @@ import com.sovetnikov.application.model.Like;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,28 +26,29 @@ public class LikeService {
     }
 
     @Transactional
-    public void create(Like like){
-            likeRepository.save(like);
+    public void create(Like like) {
+        likeRepository.save(like);
     }
 
-    public List<Like> getUserLikes (int userId){
+    public List<Like> getUserLikes(int userId) {
         return likeRepository.getUserLikes(userId);
     }
 
-    public List<Like> getExcursionLikes(int excursionId){
+    public List<Like> getExcursionLikes(int excursionId) {
         return likeRepository.getExcursionLikes(excursionId);
+
     }
 
     @Transactional
-    public void delete(int id){
+    public void delete(int id) {
         likeRepository.deleteById(id);
     }
 
-    public Optional<Like> get(int id){
+    public Optional<Like> get(int id) {
         return likeRepository.findById(id);
     }
 
-    public Optional<Like> getByExcursionAndUser(Excursion excursion, User user){
-        return likeRepository.findByExcursionAndUser(excursion,user);
+    public Optional<Like> getByExcursionAndUser(Excursion excursion, User user) {
+        return likeRepository.findByExcursionAndUser(excursion, user);
     }
 }

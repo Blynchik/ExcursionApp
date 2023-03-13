@@ -7,6 +7,7 @@ import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +40,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> getAll() {
-        return userRepository.findAll(Sort.by("name"));
+    public List<User> getAll(int page) {
+        return userRepository.findAll(PageRequest.of(page, 3, Sort.by("name"))).getContent();
     }
 
     @Transactional
