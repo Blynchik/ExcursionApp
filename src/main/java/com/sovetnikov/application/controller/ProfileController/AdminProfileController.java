@@ -41,13 +41,14 @@ public class AdminProfileController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getOne(@PathVariable int id) {
+    public ResponseEntity<UserDto> getOne(@PathVariable int id,
+                                          @RequestParam boolean onlyNext) {
 
         if (userService.get(id).isPresent()) {
 
             UserDto userDto = Converter.getUserDto(userService.get(id).get());
 
-            userDto.setExcursions(userService.getWithExcursions(id).stream()
+            userDto.setExcursions(userService.getWithExcursions(id, onlyNext).stream()
                     .map(Converter::getExcursionDto).toList());
 
             userDto.setComments(commentService.getUserComment(id).stream()

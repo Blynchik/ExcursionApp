@@ -65,9 +65,10 @@ public class UserExcursionController {
     }
 
     @GetMapping("/own")
-    public ResponseEntity<List<ExcursionDto>> getOwnExcursions(@AuthenticationPrincipal AuthUser authUser) {
+    public ResponseEntity<List<ExcursionDto>> getOwnExcursions(@AuthenticationPrincipal AuthUser authUser,
+                                                               @RequestParam boolean onlyNext) {
         return ResponseEntity.ok().body(
-                userService.getWithExcursions(authUser.id()).stream()
+                userService.getWithExcursions(authUser.id(),onlyNext).stream()
                         .map(Converter::getExcursionDto).toList());
     }
 
@@ -130,5 +131,11 @@ public class UserExcursionController {
             return ResponseEntity.ok().body(Converter.getLikeDto(like));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @GetMapping("/own/attention")
+    public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser){
+        return ResponseEntity.ok().body(Converter.getExcursionDto(
+                userService.getTimeTillExcursion(authUser.id())));
     }
 }

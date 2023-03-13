@@ -14,6 +14,8 @@ public class ExcursionDto extends BaseExcursionDto {
 
     private List<LikeDto> likes;
 
+    private long daysTillExcursion;
+
     public ExcursionDto(String name, int price) {
         super(name, price);
     }
@@ -40,5 +42,13 @@ public class ExcursionDto extends BaseExcursionDto {
 
     public void setLikes(List<LikeDto> likes) {
         this.likes = likes;
+    }
+
+    public long getTillExcursion() {
+        return daysTillExcursion;
+    }
+
+    public void setTillExcursion(long tillExcursion) {
+        this.daysTillExcursion = tillExcursion;
     }
 }

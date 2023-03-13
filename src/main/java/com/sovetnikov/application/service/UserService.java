@@ -82,12 +82,28 @@ public class UserService {
         return list;
     }
 
-    public List<Excursion> getWithExcursions(int id) {
+    public List<Excursion> getWithExcursions(int id, boolean onlyNext) {
         //Hibernate.initialize(userRepository.getReferenceById(id).getExcursions());
         //так тоже можно было без создания SQL/HQL запросов
         //это касается всех похожих методов
-        List<Excursion> list =  userRepository.getWithExcursions(id).get().getExcursions();
-        list.sort(Comparator.comparing(Excursion::getDate));
-        return list;
+        if (onlyNext) {
+            return userRepository.getWithExcursions(id).get().getExcursions()
+                    .stream()
+                    .sorted(Comparator.comparing(Excursion::getDate))
+                    .filter(e -> e.getDate().isAfter(LocalDate.now()))
+                    .toList();
+        }
+
+        return userRepository.getWithExcursions(id).get().getExcursions().stream()
+                .sorted(Comparator.comparing(Excursion::getDate))
+                .toList();
+    }
+
+    public Excursion getTimeTillExcursion(int userId){
+        Excursion excursion = getWithExcursions(userId,true).get(0);
+        long excursionDay = excursion.getDate().toEpochDay();
+        long todayDay = LocalDate.now().toEpochDay();
+        excursion.setTillExcursion(excursionDay-todayDay);
+        return excursion;
     }
 }

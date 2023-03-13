@@ -45,6 +45,9 @@ public class Excursion {
     @OneToMany(mappedBy = "excursion")
     private List<Like> likes;
 
+    @Transient
+    private long daysTillExcursion;
+
     public Excursion() {
     }
 
@@ -115,5 +118,13 @@ public class Excursion {
 
     public void setLikes(List<Like> likes) {
         this.likes = likes;
+    }
+
+    public long getTillExcursion() {
+        return daysTillExcursion;
+    }
+
+    public void setTillExcursion(long tillExcursion) {
+        this.daysTillExcursion = tillExcursion;
     }
 }
