@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/comment")
@@ -44,9 +45,11 @@ public class UserCommentController {
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {
 
-        if (commentService.get(id).isPresent()) {
+        Optional<Comment> comment = commentService.get(id);
 
-            if (commentService.get(id).get().getUser().getId() == authUser.id()) {
+        if (comment.isPresent()) {
+
+            if (comment.get().getUser().getId() == authUser.id()) {
                 commentService.delete(id);
                 return ResponseEntity.ok().build();
             }

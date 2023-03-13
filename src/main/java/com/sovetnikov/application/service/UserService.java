@@ -30,7 +30,7 @@ public class UserService {
     }
 
     @Transactional
-    public void create(User user){
+    public void create(User user) {
         user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
         userRepository.save(user);
@@ -67,17 +67,17 @@ public class UserService {
     }
 
     @Transactional
-    public void changeAuthority(int id, Role role){
+    public void changeAuthority(int id, Role role) {
         userRepository.getReferenceById(id).setRole(role);
     }
 
     @Transactional
-    public void changePassword(int id, String password){
+    public void changePassword(int id, String password) {
         userRepository.getReferenceById(id).setPassword(SecurityConfig.PASSWORD_ENCODER.encode(password));
     }
 
-    public List<User> getByNameLike(String query){
-        List<User> list =  userRepository.findByNameStartingWithIgnoreCase(query);
+    public List<User> getByNameLike(String query) {
+        List<User> list = userRepository.findByNameStartingWithIgnoreCase(query);
         list.sort(Comparator.comparing(User::getName));
         return list;
     }
@@ -97,11 +97,11 @@ public class UserService {
                 .toList();
     }
 
-    public Excursion getTimeTillExcursion(int userId){
-        Excursion excursion = getWithExcursions(userId,true).get(0);
+    public Excursion getTimeTillExcursion(int userId) {
+        Excursion excursion = getWithExcursions(userId, true).get(0);
         long excursionDay = excursion.getDate().toEpochDay();
         long todayDay = LocalDate.now().toEpochDay();
-        excursion.setDaysTillExcursion(excursionDay-todayDay);
+        excursion.setDaysTillExcursion(excursionDay - todayDay);
         return excursion;
     }
 }

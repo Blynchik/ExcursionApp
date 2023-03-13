@@ -132,7 +132,7 @@ public class Excursion {
     }
 
     public int getLikesAmount() {
-        return likes.size();
+        return likesAmount;
     }
 
     public void setLikesAmount(int likesAmount) {

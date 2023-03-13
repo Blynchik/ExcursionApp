@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -34,8 +35,10 @@ public class UserProfileController{
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable final int id) {
 
-        if (userService.get(id).isPresent()) {
-            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
+        Optional<User> user = userService.get(id);
+
+        if (user.isPresent()) {
+            return ResponseEntity.ok().body(Converter.getUserDto(user.get()));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -73,7 +76,7 @@ public class UserProfileController{
                 userService.changePassword(authUser.id(), password);
             }
 
-            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(authUser.id()).get()));
+            return ResponseEntity.ok().body(Converter.getUserDto(user));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/like")
@@ -42,8 +43,10 @@ public class UserLikeController {
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {
 
-        if (likeService.get(id).isPresent()) {
-            if (likeService.get(id).get().getUser().getId() == authUser.id()) {
+        Optional<Like> like = likeService.get(id);
+
+        if (like.isPresent()) {
+            if (like.get().getUser().getId() == authUser.id()) {
                 likeService.delete(id);
                 return ResponseEntity.ok().build();
             }

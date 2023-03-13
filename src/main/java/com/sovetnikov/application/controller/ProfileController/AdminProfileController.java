@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import com.sovetnikov.application.util.Converter;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/user")
@@ -44,9 +45,11 @@ public class AdminProfileController {
     public ResponseEntity<UserDto> getOne(@PathVariable int id,
                                           @RequestParam boolean onlyNext) {
 
-        if (userService.get(id).isPresent()) {
+        Optional<User> user = userService.get(id);
 
-            UserDto userDto = Converter.getUserDto(userService.get(id).get());
+        if (user.isPresent()) {
+
+            UserDto userDto = Converter.getUserDto(user.get());
 
             userDto.setExcursions(userService.getWithExcursions(id, onlyNext).stream()
                     .map(Converter::getExcursionDto).toList());
@@ -108,6 +111,7 @@ public class AdminProfileController {
 
         userValidator.validate(userDto, bindingResult);
 
+
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
@@ -125,7 +129,7 @@ public class AdminProfileController {
                 userService.changeAuthority(id, role);
             }
 
-            return ResponseEntity.ok().body(Converter.getUserDto(userService.get(id).get()));
+            return ResponseEntity.ok().body(Converter.getUserDto(user));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

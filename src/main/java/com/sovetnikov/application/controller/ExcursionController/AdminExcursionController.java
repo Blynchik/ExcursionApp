@@ -9,12 +9,14 @@ import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
+import com.sovetnikov.application.util.CompetitionTimer;
 import com.sovetnikov.application.util.Converter;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.ExcursionUtils.ExcursionValidator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jdk.dynalink.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -52,8 +55,10 @@ public class AdminExcursionController {
     @GetMapping("/{id}")
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
-        if (excursionService.get(id).isPresent()) {
-            ExcursionDto excursionDto = Converter.getExcursionDto(excursionService.get(id).get());
+        Optional<Excursion> excursion = excursionService.get(id);
+
+        if (excursion.isPresent()) {
+            ExcursionDto excursionDto = Converter.getExcursionDto(excursion.get());
 
             excursionDto.setUsers(excursionService.getWithUsers(id).stream()
                     .map(Converter::getUserDto).toList());
@@ -110,7 +115,7 @@ public class AdminExcursionController {
             Excursion excursion = Converter.getExcursion(excursionDto);
             excursionService.update(excursion, id);
 
-            return ResponseEntity.ok().body(Converter.getExcursionDto(excursionService.get(id).get()));
+            return ResponseEntity.ok().body(Converter.getExcursionDto(excursion));
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -167,14 +172,22 @@ public class AdminExcursionController {
 
     @GetMapping("/getWinner")
     public ResponseEntity<List<ExcursionDto>> getWinner() {
-        List<ExcursionDto> excursionDtoList = new ArrayList<>();
+        if(CompetitionTimer.timeToCompare()) {
 
-        for(Excursion excursion: excursionService.getWinner()){
-            ExcursionDto excursionDto = Converter.getExcursionDto(excursion);
-            excursionDto.setLikesAmount(excursion.getLikesAmount());
-            excursionDtoList.add(excursionDto);
+            List<ExcursionDto> excursionDtoList = new ArrayList<>();
+
+            for (Excursion excursion : excursionService.getWinner()) {
+
+                ExcursionDto excursionDto = Converter.getExcursionDto(excursion);
+                excursionDto.setLikesAmount(excursion.getLikesAmount());
+                likeService.clearAllLikes(excursion.getId());
+                excursionDtoList.add(excursionDto);
+
+            }
+
+            return ResponseEntity.ok().body(excursionDtoList);
         }
 
-        return ResponseEntity.ok().body(excursionDtoList);
+        return ResponseEntity.noContent().build();
     }
 }

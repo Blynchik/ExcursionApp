@@ -3,9 +3,7 @@ package com.sovetnikov.application.controller.ExcursionController;
 import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
 import com.sovetnikov.application.dto.LikeDto;
-import com.sovetnikov.application.model.AuthUser;
-import com.sovetnikov.application.model.Comment;
-import com.sovetnikov.application.model.Like;
+import com.sovetnikov.application.model.*;
 import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
@@ -20,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/excursion")
@@ -44,8 +43,10 @@ public class UserExcursionController {
     @GetMapping("/{id}")
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
-        if (excursionService.get(id).isPresent()) {
-            ExcursionDto excursionDto = Converter.getExcursionDto(excursionService.get(id).get());
+        Optional<Excursion> excursion = excursionService.get(id);
+
+        if (excursion.isPresent()) {
+            ExcursionDto excursionDto = Converter.getExcursionDto(excursion.get());
             excursionDto.setLikesAmount(excursionService.getLikesAmount(id));
 
             return ResponseEntity.ok().body(excursionDto);
@@ -55,8 +56,8 @@ public class UserExcursionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam (required = false) boolean onlyNext,
-                                                     @RequestParam (required = false, defaultValue = "0") int page) {
+    public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam(required = false) boolean onlyNext,
+                                                     @RequestParam(required = false, defaultValue = "0") int page) {
         return ResponseEntity.ok().body(excursionService.getAll(page, onlyNext).stream()
                 .map(Converter::getExcursionDto).toList());
     }
@@ -71,7 +72,7 @@ public class UserExcursionController {
     public ResponseEntity<List<ExcursionDto>> getOwnExcursions(@AuthenticationPrincipal AuthUser authUser,
                                                                @RequestParam boolean onlyNext) {
         return ResponseEntity.ok().body(
-                userService.getWithExcursions(authUser.id(),onlyNext).stream()
+                userService.getWithExcursions(authUser.id(), onlyNext).stream()
                         .map(Converter::getExcursionDto).toList());
     }
 
@@ -83,18 +84,20 @@ public class UserExcursionController {
 
     @PostMapping("/{id}/comment")
     public ResponseEntity<Object> createComment(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id,
-                                         @RequestParam
-                                         @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
-                                         @NotBlank(message = "Комментарий не должен быть пустым")
-                                         String message) {
+                                                @PathVariable int id,
+                                                @RequestParam
+                                                @Size(max = 300, message = "Комментарий должен быть не более 300 знаков")
+                                                @NotBlank(message = "Комментарий не должен быть пустым")
+                                                String message) {
 
+        Optional<Excursion> excursion = excursionService.get(id);
+        Optional<User> user = userService.get(authUser.id());
 
-        if (excursionService.get(id).isPresent() && userService.get(authUser.id()).isPresent()) {
+        if (excursion.isPresent() && user.isPresent()) {
 
             Comment comment = new Comment(message,
-                    userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
+                    user.get(),
+                    excursion.get());
 
             commentService.create(comment);
 
@@ -111,23 +114,25 @@ public class UserExcursionController {
 
     @PostMapping("/{id}/like")
     public ResponseEntity<Object> createLike(@AuthenticationPrincipal AuthUser authUser,
-                                         @PathVariable int id) {
+                                             @PathVariable int id) {
 
+        Optional<Excursion> excursion = excursionService.get(id);
+        Optional<User> user = userService.get(authUser.id());
 
-        if (excursionService.get(id).isPresent()
-                && userService.get(authUser.id()).isPresent()) {
+        if (excursion.isPresent()
+                && user.isPresent()) {
 
             if (likeService.getByExcursionAndUser(
-                            excursionService.get(id).get(),
-                            userService.get(authUser.id()).get())
+                            excursion.get(),
+                            user.get())
                     .isPresent()) {
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         new RuntimeException("Уже существует").getMessage());
             }
 
-            Like like = new Like(userService.get(authUser.id()).get(),
-                    excursionService.get(id).get());
+            Like like = new Like(user.get(),
+                    excursion.get());
 
             likeService.create(like);
 
@@ -137,7 +142,7 @@ public class UserExcursionController {
     }
 
     @GetMapping("/own/attention")
-    public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser){
+    public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok().body(Converter.getExcursionDto(
                 userService.getTimeTillExcursion(authUser.id())));
     }
