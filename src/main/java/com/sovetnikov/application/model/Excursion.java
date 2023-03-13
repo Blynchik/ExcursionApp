@@ -46,6 +46,9 @@ public class Excursion {
     private List<Like> likes;
 
     @Transient
+    private int likesAmount;
+
+    @Transient
     private long daysTillExcursion;
 
     public Excursion() {
@@ -120,11 +123,19 @@ public class Excursion {
         this.likes = likes;
     }
 
-    public long getTillExcursion() {
+    public long getDaysTillExcursion() {
         return daysTillExcursion;
     }
 
-    public void setTillExcursion(long tillExcursion) {
+    public void setDaysTillExcursion(long tillExcursion) {
         this.daysTillExcursion = tillExcursion;
+    }
+
+    public int getLikesAmount() {
+        return likes.size();
+    }
+
+    public void setLikesAmount(int likesAmount) {
+        this.likesAmount = likesAmount;
     }
 }

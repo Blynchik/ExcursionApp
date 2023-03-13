@@ -6,28 +6,31 @@ import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.ExcursionRepository;
+import com.sovetnikov.application.repository.LikeRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
 public class ExcursionService {
 
     private final ExcursionRepository excursionRepository;
+    private final LikeService likeService;
     private final ExcursionDao excursionDao;
 
     @Autowired
-    public ExcursionService(ExcursionRepository excursionRepository, ExcursionDao excursionDao) {
+    public ExcursionService(ExcursionRepository excursionRepository,
+                            ExcursionDao excursionDao,
+                            LikeService likeService) {
         this.excursionRepository = excursionRepository;
         this.excursionDao = excursionDao;
+        this.likeService = likeService;
     }
 
     @Transactional
@@ -43,7 +46,7 @@ public class ExcursionService {
 
         if (onlyNext) {
 
-            List<Excursion> excursions= excursionRepository.findAll( Sort.by("date"))
+            List<Excursion> excursions = excursionRepository.findAll(Sort.by("date"))
                     .stream()
                     .filter(e -> e.getDate().isAfter(LocalDate.now()))
                     .toList();
@@ -90,6 +93,18 @@ public class ExcursionService {
     @Transactional
     public void addUserToExcursion(int excursionId, int userId) {
         excursionDao.addUserToExcursion(excursionId, userId);
+    }
+
+    public List<Excursion> getWinner() {
+
+        return excursionRepository.findAll(Sort.by("date")).stream()
+                .filter(e -> e.getDate().isBefore(LocalDate.now()))
+                .sorted(Comparator.comparing(Excursion::getLikesAmount).reversed())
+                .toList();
+    }
+
+    public int getLikesAmount(int excursionId){
+        return excursionRepository.getReferenceById(excursionId).getLikes().size();
     }
 }
 

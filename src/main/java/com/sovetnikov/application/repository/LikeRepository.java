@@ -21,4 +21,6 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
     List<Like> getExcursionLikes(int userId);
 
     Optional<Like> findByExcursionAndUser(Excursion excursion, User user);
+
+    void deleteAllByExcursion_Id(int excursionId);
 }

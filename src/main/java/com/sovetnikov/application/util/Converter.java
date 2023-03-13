@@ -28,7 +28,7 @@ public class Converter {
         ExcursionDto excursionDto = new ExcursionDto(excursion.getName(), excursion.getPrice());
         excursionDto.setDate(excursion.getDate());
         excursionDto.setDescription(excursion.getDescription());
-        excursionDto.setTillExcursion(excursion.getTillExcursion());
+        excursionDto.setDaysTillExcursion(excursion.getDaysTillExcursion());
         return excursionDto;
     }
 

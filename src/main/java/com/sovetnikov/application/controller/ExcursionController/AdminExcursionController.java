@@ -22,7 +22,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin/user/excursion")
@@ -55,6 +57,8 @@ public class AdminExcursionController {
 
             excursionDto.setUsers(excursionService.getWithUsers(id).stream()
                     .map(Converter::getUserDto).toList());
+
+            excursionDto.setLikesAmount(excursionService.getLikesAmount(id));
 
             return ResponseEntity.ok().body(excursionDto);
         }
@@ -139,14 +143,38 @@ public class AdminExcursionController {
 
     @PatchMapping("/{id}/add")
     public ResponseEntity<HttpStatus> addUser(@PathVariable int id,
-                                              @RequestParam int userId){
+                                              @RequestParam int userId) {
 
-        if(userService.get(userId).isPresent() && excursionService.get(id).isPresent()) {
+        if (userService.get(userId).isPresent() && excursionService.get(id).isPresent()) {
             excursionService.addUserToExcursion(id, userId);
 
             return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{id}/zeroing")
+    public ResponseEntity<HttpStatus> zeroingLikes(@PathVariable int id) {
+
+        if (excursionService.get(id).isPresent()) {
+            likeService.clearAllLikes(id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/getWinner")
+    public ResponseEntity<List<ExcursionDto>> getWinner() {
+        List<ExcursionDto> excursionDtoList = new ArrayList<>();
+
+        for(Excursion excursion: excursionService.getWinner()){
+            ExcursionDto excursionDto = Converter.getExcursionDto(excursion);
+            excursionDto.setLikesAmount(excursion.getLikesAmount());
+            excursionDtoList.add(excursionDto);
+        }
+
+        return ResponseEntity.ok().body(excursionDtoList);
     }
 }

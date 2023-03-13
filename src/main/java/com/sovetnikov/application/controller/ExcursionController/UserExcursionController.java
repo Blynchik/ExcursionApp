@@ -45,7 +45,10 @@ public class UserExcursionController {
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
         if (excursionService.get(id).isPresent()) {
-            return ResponseEntity.ok().body(Converter.getExcursionDto(excursionService.get(id).get()));
+            ExcursionDto excursionDto = Converter.getExcursionDto(excursionService.get(id).get());
+            excursionDto.setLikesAmount(excursionService.getLikesAmount(id));
+
+            return ResponseEntity.ok().body(excursionDto);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

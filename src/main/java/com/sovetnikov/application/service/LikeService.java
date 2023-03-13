@@ -51,4 +51,9 @@ public class LikeService {
     public Optional<Like> getByExcursionAndUser(Excursion excursion, User user) {
         return likeRepository.findByExcursionAndUser(excursion, user);
     }
+
+    @Transactional
+    public void clearAllLikes(int excursionId){
+        likeRepository.deleteAllByExcursion_Id(excursionId);
+    }
 }

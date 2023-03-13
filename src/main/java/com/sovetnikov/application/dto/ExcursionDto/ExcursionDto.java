@@ -8,13 +8,16 @@ import java.util.List;
 
 public class ExcursionDto extends BaseExcursionDto {
 
+    private long daysTillExcursion;
+
+    private int likesAmount;
+
     private List<UserDto> users;
 
     private List<CommentDto> comments;
 
     private List<LikeDto> likes;
 
-    private long daysTillExcursion;
 
     public ExcursionDto(String name, int price) {
         super(name, price);
@@ -44,11 +47,19 @@ public class ExcursionDto extends BaseExcursionDto {
         this.likes = likes;
     }
 
-    public long getTillExcursion() {
+    public long getDaysTillExcursion() {
         return daysTillExcursion;
     }
 
-    public void setTillExcursion(long tillExcursion) {
-        this.daysTillExcursion = tillExcursion;
+    public void setDaysTillExcursion(long daysTillExcursion) {
+        this.daysTillExcursion = daysTillExcursion;
+    }
+
+    public int getLikesAmount() {
+        return likesAmount;
+    }
+
+    public void setLikesAmount(int likesAmount) {
+        this.likesAmount = likesAmount;
     }
 }
