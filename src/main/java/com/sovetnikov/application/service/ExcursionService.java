@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -38,8 +39,15 @@ public class ExcursionService {
         return excursionRepository.findById(id);
     }
 
-    public List<Excursion> getAll() {
-        return excursionRepository.findAll(Sort.by("date"));
+    public List<Excursion> getAll(boolean onlyNext) {
+
+        List<Excursion> list = excursionRepository.findAll(Sort.by("date"));
+
+        if(onlyNext){
+            list = list.stream().filter(e -> e.getDate().isAfter(LocalDate.now())).toList();
+        }
+
+        return list;
     }
 
     @Transactional

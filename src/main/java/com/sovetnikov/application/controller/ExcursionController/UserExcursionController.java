@@ -52,8 +52,8 @@ public class UserExcursionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExcursionDto>> getAll() {
-        return ResponseEntity.ok().body(excursionService.getAll().stream()
+    public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam (required = false) boolean onlyNext) {
+        return ResponseEntity.ok().body(excursionService.getAll(onlyNext).stream()
                 .map(Converter::getExcursionDto).toList());
     }
 
