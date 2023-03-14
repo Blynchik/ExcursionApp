@@ -4,6 +4,7 @@ import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
+import com.sovetnikov.application.repository.UserRepository;
 import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,16 +31,19 @@ public class AdminProfileController {
     private final UserValidator userValidator;
     private final CommentService commentService;
     private final LikeService likeService;
+    private final UserRepository userRepository;
 
     @Autowired
     public AdminProfileController(UserService userService,
                                   UserValidator userValidator,
                                   CommentService commentService,
-                                  LikeService likeService) {
+                                  LikeService likeService,
+                                  UserRepository userRepository) {
         this.userService = userService;
         this.userValidator = userValidator;
         this.commentService = commentService;
         this.likeService = likeService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/{id}")
@@ -67,7 +72,7 @@ public class AdminProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAll(@RequestParam (defaultValue = "0") int page) {
+    public ResponseEntity<List<UserDto>> getAll(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(userService.getAll(page).stream()
                 .map(Converter::getUserDto).toList());
     }
@@ -121,11 +126,11 @@ public class AdminProfileController {
             User user = Converter.getUser(userDto);
             userService.update(user, id);
 
-            if(password!=null &&!password.isEmpty() && !password.isBlank()){
+            if (password != null && !password.isEmpty() && !password.isBlank()) {
                 userService.changePassword(id, password);
             }
 
-            if(role!=null && !role.name().isBlank() && !role.name().isEmpty()){
+            if (role != null && !role.name().isBlank() && !role.name().isEmpty()) {
                 userService.changeAuthority(id, role);
             }
 
