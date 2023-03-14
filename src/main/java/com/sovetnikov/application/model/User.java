@@ -7,6 +7,8 @@ import jakarta.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.Cache;
+
 @Entity
 @Table(name = "users")
 public class User {

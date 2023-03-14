@@ -1,5 +1,6 @@
 package com.sovetnikov.application.service;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.config.SecurityConfig;
 import com.sovetnikov.application.dao.ExcursionDao;
 import com.sovetnikov.application.model.Excursion;
@@ -33,15 +34,18 @@ public class ExcursionService {
         this.likeService = likeService;
     }
 
+    @LogExecutionTime
     @Transactional
     public void create(Excursion excursion) {
         excursionRepository.save(excursion);
     }
 
+    @LogExecutionTime
     public Optional<Excursion> get(int id) {
         return excursionRepository.findById(id);
     }
 
+    @LogExecutionTime
     public List<Excursion> getAll(int page, boolean onlyNext) {
 
         if (onlyNext) {
@@ -57,44 +61,52 @@ public class ExcursionService {
         return excursionRepository.findAll(PageRequest.of(page, 3, Sort.by("date"))).getContent();
     }
 
+    @LogExecutionTime
     @Transactional
     public void update(Excursion updatedExcursion, int id) {
         updatedExcursion.setId(id);
         excursionRepository.save(updatedExcursion);
     }
 
+    @LogExecutionTime
     @Transactional
     public void delete(int id) {
         excursionRepository.deleteById(id);
     }
 
+    @LogExecutionTime
     public List<Excursion> getByNameLike(String query) {
         List<Excursion> list = excursionRepository.findByNameStartingWithIgnoreCase(query);
         list.sort(Comparator.comparing(Excursion::getName));
         return list;
     }
 
+    @LogExecutionTime
     public List<User> getWithUsers(int id) {
         List<User> list = excursionRepository.getWithUsers(id).get().getUsers();
         list.sort(Comparator.comparing(User::getName));
         return list;
     }
 
+    @LogExecutionTime
     @Transactional
     public void clearExcursionUsers(int id) {
         excursionDao.clearUsers(id);
     }
 
+    @LogExecutionTime
     @Transactional
     public void deleteFromExcursion(int excursionId, int userId) {
         excursionDao.deleteFromExcursion(excursionId, userId);
     }
 
+    @LogExecutionTime
     @Transactional
     public void addUserToExcursion(int excursionId, int userId) {
         excursionDao.addUserToExcursion(excursionId, userId);
     }
 
+    @LogExecutionTime
     public List<Excursion> getWinner() {
 
         return excursionRepository.findAll(Sort.by("date")).stream()
@@ -103,6 +115,7 @@ public class ExcursionService {
                 .toList();
     }
 
+    @LogExecutionTime
     public int getLikesAmount(int excursionId){
         return excursionRepository.getReferenceById(excursionId).getLikes().size();
     }

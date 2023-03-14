@@ -1,5 +1,6 @@
 package com.sovetnikov.application.service;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
 import com.sovetnikov.application.model.User;
@@ -25,33 +26,40 @@ public class LikeService {
         this.likeRepository = likeRepository;
     }
 
+    @LogExecutionTime
     @Transactional
     public void create(Like like) {
         likeRepository.save(like);
     }
 
+    @LogExecutionTime
     public List<Like> getUserLikes(int userId) {
         return likeRepository.getUserLikes(userId);
     }
 
+    @LogExecutionTime
     public List<Like> getExcursionLikes(int excursionId) {
         return likeRepository.getExcursionLikes(excursionId);
 
     }
 
+    @LogExecutionTime
     @Transactional
     public void delete(int id) {
         likeRepository.deleteById(id);
     }
 
+    @LogExecutionTime
     public Optional<Like> get(int id) {
         return likeRepository.findById(id);
     }
 
+    @LogExecutionTime
     public Optional<Like> getByExcursionAndUser(Excursion excursion, User user) {
         return likeRepository.findByExcursionAndUser(excursion, user);
     }
 
+    @LogExecutionTime
     @Transactional
     public void clearAllLikes(int excursionId){
         likeRepository.deleteAllByExcursion_Id(excursionId);

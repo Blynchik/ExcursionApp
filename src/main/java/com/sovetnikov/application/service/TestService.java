@@ -1,5 +1,6 @@
 package com.sovetnikov.application.service;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.repository.CommentRepository;
 import com.sovetnikov.application.repository.ExcursionRepository;
 import com.sovetnikov.application.repository.LikeRepository;
@@ -25,6 +26,7 @@ public class TestService {
         this.likeRepository = likeRepository;
     }
 
+    @LogExecutionTime
     public void test(){
         System.out.println("CHECK N+1:");
 
