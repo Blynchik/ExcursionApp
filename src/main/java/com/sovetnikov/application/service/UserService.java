@@ -86,12 +86,14 @@ public class UserService {
         userRepository.getReferenceById(id).setPassword(SecurityConfig.PASSWORD_ENCODER.encode(password));
     }
 
+    @LogExecutionTime
     public List<User> getByNameLike(String query) {
         List<User> list = userRepository.findByNameStartingWithIgnoreCase(query);
         list.sort(Comparator.comparing(User::getName));
         return list;
     }
 
+    @LogExecutionTime
     public List<Excursion> getWithExcursions(int id, boolean onlyNext) {
 
         if (onlyNext) {
@@ -107,6 +109,7 @@ public class UserService {
                 .toList();
     }
 
+    @LogExecutionTime
     public Excursion getTimeTillExcursion(int userId) {
         Excursion excursion = getWithExcursions(userId, true).get(0);
         long excursionDay = excursion.getDate().toEpochDay();
