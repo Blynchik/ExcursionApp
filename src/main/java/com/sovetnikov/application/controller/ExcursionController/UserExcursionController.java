@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user/excursion")
@@ -47,7 +48,10 @@ public class UserExcursionController {
 
         if (excursion.isPresent()) {
             ExcursionDto excursionDto = Converter.getExcursionDto(excursion.get());
+            excursionDto.setDate(excursion.get().getDate());
+            excursionDto.setPrice(excursion.get().getPrice());
             excursionDto.setLikesAmount(excursionService.getLikesAmount(id));
+            excursionDto.setDaysTillExcursion(excursion.get().getDaysTillExcursion());
 
             return ResponseEntity.ok().body(excursionDto);
         }
@@ -56,16 +60,26 @@ public class UserExcursionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam(required = false) boolean onlyNext,
+    public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam boolean onlyNext,
                                                      @RequestParam(required = false, defaultValue = "0") int page) {
         return ResponseEntity.ok().body(excursionService.getAll(page, onlyNext).stream()
-                .map(Converter::getExcursionDto).toList());
+                .map(e -> {
+                    ExcursionDto exc = Converter.getExcursionDto(e);
+                    exc.setDate(e.getDate());
+                    exc.setDescription(e.getDescription());
+                    return exc;
+                }).collect(Collectors.toList()));
     }
 
     @GetMapping("/findByName")
     public ResponseEntity<List<ExcursionDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(excursionService.getByNameLike(query).stream()
-                .map(Converter::getExcursionDto).toList());
+                .map(e -> {
+                    ExcursionDto exc = Converter.getExcursionDto(e);
+                    exc.setDate(e.getDate());
+                    exc.setDescription(e.getDescription());
+                    return exc;
+                }).collect(Collectors.toList()));
     }
 
     @GetMapping("/own")
@@ -73,13 +87,24 @@ public class UserExcursionController {
                                                                @RequestParam boolean onlyNext) {
         return ResponseEntity.ok().body(
                 userService.getWithExcursions(authUser.id(), onlyNext).stream()
-                        .map(Converter::getExcursionDto).toList());
+                        .map(e -> {
+                            ExcursionDto exc = Converter.getExcursionDto(e);
+                            exc.setDate(e.getDate());
+                            exc.setDate(e.getDate());
+                            return exc;
+                        }).toList());
     }
 
     @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllExcursionComments(@PathVariable int id) {
-        return ResponseEntity.ok().body(commentService.getExcursionComment(id).stream()
-                .map(Converter::getCommentDto).toList());
+
+        if (excursionService.get(id).isPresent()) {
+
+            return ResponseEntity.ok().body(commentService.getExcursionComment(id).stream()
+                    .map(Converter::getCommentDto).toList());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/{id}/comment")
@@ -101,15 +126,19 @@ public class UserExcursionController {
 
             commentService.create(comment);
 
-            return ResponseEntity.ok().body(Converter.getCommentDto(comment));
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/{id}/like")
-    public ResponseEntity<List<LikeDto>> getAllExcursionLikes(@PathVariable int id) {
-        return ResponseEntity.ok().body(likeService.getExcursionLikes(id).stream()
-                .map(Converter::getLikeDto).toList());
+    public ResponseEntity<List<LikeDto>> getAllExcursionLike(@PathVariable int id) {
+
+        if (excursionService.get(id).isPresent()) {
+            return ResponseEntity.ok().body(likeService.getExcursionLikes(id).stream()
+                    .map(Converter::getLikeDto).toList());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/{id}/like")
@@ -122,28 +151,28 @@ public class UserExcursionController {
         if (excursion.isPresent()
                 && user.isPresent()) {
 
-            if (likeService.getByExcursionAndUser(
-                            excursion.get(),
-                            user.get())
+            if (likeService.getByExcursionAndUser(excursion.get(), user.get())
                     .isPresent()) {
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         new RuntimeException("Уже существует").getMessage());
             }
 
-            Like like = new Like(user.get(),
-                    excursion.get());
+            Like like = new Like(user.get(), excursion.get());
 
             likeService.create(like);
 
-            return ResponseEntity.ok().body(Converter.getLikeDto(like));
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/own/attention")
     public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser) {
-        return ResponseEntity.ok().body(Converter.getExcursionDto(
-                userService.getTimeTillExcursion(authUser.id())));
+        Excursion excursion = userService.getTimeTillExcursion(authUser.id());
+        ExcursionDto excursionDto = Converter.getExcursionDto(excursion);
+        excursionDto.setDate(excursion.getDate());
+        excursionDto.setDaysTillExcursion(excursion.getDaysTillExcursion());
+        return ResponseEntity.ok().body(excursionDto);
     }
 }

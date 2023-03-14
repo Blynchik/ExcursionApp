@@ -40,7 +40,6 @@ public class LikeService {
     @LogExecutionTime
     public List<Like> getExcursionLikes(int excursionId) {
         return likeRepository.getExcursionLikes(excursionId);
-
     }
 
     @LogExecutionTime

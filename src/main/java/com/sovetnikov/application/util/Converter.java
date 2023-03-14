@@ -13,7 +13,9 @@ import com.sovetnikov.application.model.User;
 public class Converter {
 
     public static UserDto getUserDto(User user) {
-        return new UserDto(user.getName(), user.getEmail(), user.getPhoneNumber());
+        UserDto userDto = new UserDto();
+        userDto.setName(user.getName());
+        return userDto;
     }
 
     public static User getUser(BaseUserDto userDto) {
@@ -25,10 +27,8 @@ public class Converter {
     }
 
     public static ExcursionDto getExcursionDto(Excursion excursion) {
-        ExcursionDto excursionDto = new ExcursionDto(excursion.getName(), excursion.getPrice());
-        excursionDto.setDate(excursion.getDate());
-        excursionDto.setDescription(excursion.getDescription());
-        excursionDto.setDaysTillExcursion(excursion.getDaysTillExcursion());
+        ExcursionDto excursionDto = new ExcursionDto();
+        excursionDto.setName(excursion.getName());
         return excursionDto;
     }
 
@@ -42,12 +42,10 @@ public class Converter {
     }
 
     public static CommentDto getCommentDto(Comment comment) {
-        CommentDto commentDto = new CommentDto(comment.getMessage(),
-                Converter.getUserDto(comment.getUser()),
-                Converter.getExcursionDto(comment.getExcursion()));
-
+        CommentDto commentDto = new CommentDto();
         commentDto.setCreatedAt(comment.getCreatedAt());
-
+        commentDto.setMessage(comment.getMessage());
+        commentDto.setUserDto(Converter.getUserDto(comment.getUser()));
         return commentDto;
     }
 
@@ -60,8 +58,10 @@ public class Converter {
     }
 
     public static LikeDto getLikeDto(Like like) {
-        return new LikeDto(Converter.getUserDto(like.getUser()),
-                Converter.getExcursionDto(like.getExcursion()));
+        LikeDto likeDto = new LikeDto();
+        likeDto.setUserDto(Converter.getUserDto(like.getUser()));
+        likeDto.setExcursionDto(Converter.getExcursionDto(like.getExcursion()));
+        return likeDto;
     }
 
     public static Like getLike(LikeDto likeDto) {

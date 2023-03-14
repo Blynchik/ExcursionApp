@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.Cache;
 
@@ -151,5 +152,18 @@ public class User {
 
     public void setLikes(List<Like> likes) {
         this.likes = likes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id && name.equals(user.name) && email.equals(user.email) && phoneNumber.equals(user.phoneNumber) && registeredAt.equals(user.registeredAt) && password.equals(user.password) && role == user.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, phoneNumber, registeredAt, password, role);
     }
 }

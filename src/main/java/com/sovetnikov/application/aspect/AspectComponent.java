@@ -23,9 +23,4 @@ public class AspectComponent {
         log.info(joinPoint.getSignature() + " executed in " + executionTime + "ms");
         return proceed;
     }
-
-    @AfterReturning(pointcut = "execution(* com.sovetnikov.application.*.*(*))", returning = "result")
-    public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        log.info(joinPoint.getSignature().getName() + "result = " + result.toString());
-    }
 }

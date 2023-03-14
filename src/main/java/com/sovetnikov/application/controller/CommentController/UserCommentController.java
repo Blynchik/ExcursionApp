@@ -38,7 +38,10 @@ public class UserCommentController {
     @GetMapping("/own")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok().body(commentService.getUserComment(authUser.id()).stream()
-                .map(Converter::getCommentDto).toList());
+                .map(c->{CommentDto commentDto = Converter.getCommentDto(c);
+                commentDto.setExcursionDto(Converter.getExcursionDto(c.getExcursion()));
+                return commentDto;
+                }).toList());
     }
 
     @DeleteMapping("/{id}")

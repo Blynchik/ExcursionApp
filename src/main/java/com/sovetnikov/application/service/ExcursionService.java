@@ -117,7 +117,7 @@ public class ExcursionService {
 
     @LogExecutionTime
     public int getLikesAmount(int excursionId){
-        return excursionRepository.getReferenceById(excursionId).getLikes().size();
+        return likeService.getExcursionLikes(excursionId).size();
     }
 }
 

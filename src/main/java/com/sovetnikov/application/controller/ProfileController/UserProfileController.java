@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserProfileController{
+public class UserProfileController {
 
     private final UserService userService;
     private final UserValidator userValidator;
@@ -38,7 +38,10 @@ public class UserProfileController{
         Optional<User> user = userService.get(id);
 
         if (user.isPresent()) {
-            return ResponseEntity.ok().body(Converter.getUserDto(user.get()));
+            UserDto userDto = Converter.getUserDto(user.get());
+            userDto.setEmail(user.get().getEmail());
+            userDto.setPhoneNumber(user.get().getPhoneNumber());
+            return ResponseEntity.ok().body(userDto);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -72,11 +75,11 @@ public class UserProfileController{
             User user = Converter.getUser(userDto);
             userService.update(user, authUser.id());
 
-            if(password!=null &&!password.isEmpty() && !password.isBlank()){
+            if (password != null && !password.isEmpty() && !password.isBlank()) {
                 userService.changePassword(authUser.id(), password);
             }
 
-            return ResponseEntity.ok().body(Converter.getUserDto(user));
+            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -85,6 +88,11 @@ public class UserProfileController{
     @GetMapping("/findByName")
     public ResponseEntity<List<UserDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(userService.getByNameLike(query).stream()
-                .map(Converter::getUserDto).toList());
+                .map(u -> {
+                    UserDto user = Converter.getUserDto(u);
+                    user.setEmail(u.getEmail());
+                    user.setPhoneNumber(u.getPhoneNumber());
+                    return user;
+                }).toList());
     }
 }

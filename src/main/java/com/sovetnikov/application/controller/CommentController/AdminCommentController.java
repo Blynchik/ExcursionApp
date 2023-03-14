@@ -1,6 +1,7 @@
 package com.sovetnikov.application.controller.CommentController;
 
 import com.sovetnikov.application.dto.CommentDto;
+import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/user")
@@ -32,8 +34,12 @@ public class AdminCommentController {
     @GetMapping("/comment/{id}")
     public ResponseEntity<CommentDto> getOne(@PathVariable int id) {
 
+        Optional<Comment> comment = commentService.getCommentWithUserAndExcursion(id);
+
         if (commentService.get(id).isPresent()) {
-            return ResponseEntity.ok().body(Converter.getCommentDto(commentService.getCommentWithUserAndExcursion(id).get()));
+            CommentDto commentDto = Converter.getCommentDto(comment.get());
+            commentDto.setExcursionDto(Converter.getExcursionDto(comment.get().getExcursion()));
+            return ResponseEntity.ok().body(commentDto);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -41,14 +47,22 @@ public class AdminCommentController {
 
     @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@PathVariable int id) {
-        return ResponseEntity.ok().body(commentService.getUserComment(id).stream()
-                .map(Converter::getCommentDto).toList());
+
+        if (commentService.get(id).isPresent()) {
+            return ResponseEntity.ok().body(commentService.getUserComment(id).stream()
+                    .map(c -> {
+                        CommentDto comm = Converter.getCommentDto(c);
+                        comm.setExcursionDto(Converter.getExcursionDto(c.getExcursion()));
+                        return comm;
+                    }).toList());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/comment/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable int id){
+    public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
 
-        if(commentService.get(id).isPresent()){
+        if (commentService.get(id).isPresent()) {
             commentService.delete(id);
             return ResponseEntity.ok().build();
         }

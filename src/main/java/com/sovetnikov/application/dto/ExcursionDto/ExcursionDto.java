@@ -18,6 +18,7 @@ public class ExcursionDto extends BaseExcursionDto {
 
     private List<LikeDto> likes;
 
+    public ExcursionDto(){}
 
     public ExcursionDto(String name, int price) {
         super(name, price);

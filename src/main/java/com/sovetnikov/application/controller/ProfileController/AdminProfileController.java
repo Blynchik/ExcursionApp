@@ -1,5 +1,7 @@
 package com.sovetnikov.application.controller.ProfileController;
 
+import com.sovetnikov.application.dto.CommentDto;
+import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
 import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.Role;
@@ -22,6 +24,7 @@ import com.sovetnikov.application.util.Converter;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin/user")
@@ -55,12 +58,22 @@ public class AdminProfileController {
         if (user.isPresent()) {
 
             UserDto userDto = Converter.getUserDto(user.get());
+            userDto.setEmail(user.get().getEmail());
+            userDto.setPhoneNumber(user.get().getPhoneNumber());
 
             userDto.setExcursions(userService.getWithExcursions(id, onlyNext).stream()
-                    .map(Converter::getExcursionDto).toList());
+                    .map(e -> {
+                        ExcursionDto exc = Converter.getExcursionDto(e);
+                        exc.setDate(e.getDate());
+                        return exc;
+                    }).toList());
 
             userDto.setComments(commentService.getUserComment(id).stream()
-                    .map(Converter::getCommentDto).toList());
+                    .map(c->{
+                        CommentDto comm = Converter.getCommentDto(c);
+                        comm.setExcursionDto(Converter.getExcursionDto(c.getExcursion()));
+                        return comm;
+                    }).toList());
 
             userDto.setLike(likeService.getUserLikes(id).stream()
                     .map(Converter::getLikeDto).toList());
@@ -74,7 +87,12 @@ public class AdminProfileController {
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(userService.getAll(page).stream()
-                .map(Converter::getUserDto).toList());
+                .map(u -> {
+                    UserDto user = Converter.getUserDto(u);
+                    user.setEmail(u.getEmail());
+                    user.setPhoneNumber(u.getPhoneNumber());
+                    return user;
+                }).collect(Collectors.toList()));
     }
 
     @PostMapping()
@@ -93,7 +111,7 @@ public class AdminProfileController {
         user.setPassword(password);
         userService.create(user);
 
-        return ResponseEntity.ok().body(Converter.getUserDto(user));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
@@ -134,7 +152,7 @@ public class AdminProfileController {
                 userService.changeAuthority(id, role);
             }
 
-            return ResponseEntity.ok().body(Converter.getUserDto(user));
+            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

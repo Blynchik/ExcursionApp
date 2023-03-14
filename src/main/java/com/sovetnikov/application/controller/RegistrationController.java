@@ -45,6 +45,6 @@ public class RegistrationController {
         user.setPassword(password);
         registrationService.register(user);
 
-        return ResponseEntity.ok().body(Converter.getUserDto(user));
+        return ResponseEntity.ok().build();
     }
 }
