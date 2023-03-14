@@ -1,5 +1,6 @@
 package com.sovetnikov.application.repository;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
@@ -14,9 +15,11 @@ import java.util.Optional;
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Integer> {
 
+    @LogExecutionTime
     @Query(value = "SELECT r FROM Like r WHERE r.user.id=?1")
     List<Like> getUserLikes(int userId);
 
+    @LogExecutionTime
     @Query(value = "SELECT r FROM Like r WHERE r.excursion.id=?1")
     List<Like> getExcursionLikes(int excursionId);
 

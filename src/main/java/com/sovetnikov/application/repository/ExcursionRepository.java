@@ -1,5 +1,6 @@
 package com.sovetnikov.application.repository;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -15,6 +16,7 @@ public interface ExcursionRepository extends JpaRepository<Excursion, Integer> {
 
     List<Excursion> findByNameStartingWithIgnoreCase(String query);
 
+    @LogExecutionTime
     @EntityGraph(attributePaths = {"users"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query(value = "SELECT r FROM Excursion r WHERE r.id=?1")
     Optional<Excursion> getWithUsers(int id);
