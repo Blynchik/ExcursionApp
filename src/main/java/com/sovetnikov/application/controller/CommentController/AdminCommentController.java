@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.CommentController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.service.CommentService;
@@ -28,6 +29,7 @@ public class AdminCommentController {
             "Возвращает комментарий по его id с сообщением, названием экскурсии, " +
             "именем пользователя и временем комментирования." +
             "Ответ 200, если комментарий существует, иначе 404")
+    @LogExecutionTime
     @GetMapping("/comment/{id}")
     public ResponseEntity<CommentDto> getOne(@PathVariable int id) {
 
@@ -47,6 +49,7 @@ public class AdminCommentController {
             "с сообщением, именем, названием экскурсии и временем комментирования." +
             "Все комментарии сортированы по времени." +
             "Ответ 200, если пользователь существует, иначе 404")
+    @LogExecutionTime
     @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@PathVariable int id) {
 
@@ -64,6 +67,7 @@ public class AdminCommentController {
     @Operation(summary = "Доступна только администратору. " +
             "Удаляет комментарий по его id. Ответ 200, " +
             "если комментарий существует, иначе 404")
+    @LogExecutionTime
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
 

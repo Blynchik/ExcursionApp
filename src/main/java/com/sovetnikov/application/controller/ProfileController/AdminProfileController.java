@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.ProfileController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
 import com.sovetnikov.application.dto.UserDto.BaseUserDto;
@@ -53,6 +54,7 @@ public class AdminProfileController {
             "где записан пользотватель, включая прошедшие. При true возвращает только будущие экскурсии. " +
             "Экскурсии сортированы от ближайшей к более дальной. " +
             "Ответ 200, если пользователь найден, иначе 404.")
+    @LogExecutionTime
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable int id,
                                           @RequestParam boolean onlyNext) {
@@ -92,6 +94,7 @@ public class AdminProfileController {
             " Возвращает список всех пользователей " +
             "в алфавитном порядке по 3 пользователя на странице. Нумерация страниц с 0." +
             " Пользователи возвращаются с информацией о имени, эл. почте и номере телефона")
+    @LogExecutionTime
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(userService.getAll(page).stream()
@@ -112,6 +115,7 @@ public class AdminProfileController {
             "Электронная почта должна быть корректной (игнорируется регистр), уникальной, не превышать 100 знаков" +
             " и не должна быть пустой. " +
             "Номер телефона должен состоять из 10 цифр, быть уникальным и не пустым.")
+    @LogExecutionTime
     @PostMapping()
     public ResponseEntity<Object> create(@Valid @RequestBody BaseUserDto userDto,
                                          BindingResult bindingResult,
@@ -136,6 +140,7 @@ public class AdminProfileController {
             "Удаляет пользователя по id. Все его записи на экскурсии отменяются. " +
             "Лайки удаляются. Комментарии остаются без пользователя. " +
             "Ответ 200, если такой id существует, иначе 404")
+    @LogExecutionTime
     @DeleteMapping("/{id}")
     public ResponseEntity<List<UserDto>> delete(@PathVariable int id) {
 
@@ -154,6 +159,7 @@ public class AdminProfileController {
             "остаются привязанными к этому пользователю. " +
             "Ограничения, такие же как и при создании пользователя." +
             "Ответ 200, если такой id есть, иначе 404. При ошибке - 400")
+    @LogExecutionTime
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
                                          @Valid @RequestBody BaseUserDto userDto,

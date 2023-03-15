@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.service.RegistrationService;
@@ -40,6 +41,7 @@ public class RegistrationController {
             "Электронная почта должна быть корректной (игнорируется регистр), уникальной, не превышать 100 знаков" +
             " и не должна быть пустой. " +
             "Номер телефона должен состоять из 10 цифр, быть уникальным и не пустым.")
+    @LogExecutionTime
     @PostMapping()
     public ResponseEntity<Object> register(@Valid @RequestBody BaseUserDto userDto,
                                            BindingResult bindingResult,

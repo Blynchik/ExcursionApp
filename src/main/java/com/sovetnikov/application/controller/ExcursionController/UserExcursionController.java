@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.ExcursionController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
 import com.sovetnikov.application.dto.LikeDto;
@@ -46,6 +47,7 @@ public class UserExcursionController {
             "Возвращает название экскурсии, дату проведения, цену " +
             "и количество лайков по id экскурсии. Ответ 200, если id " +
             "существует, иначе 404")
+    @LogExecutionTime
     @GetMapping("/{id}")
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
@@ -69,6 +71,7 @@ public class UserExcursionController {
             "При false возращает все экскурсии, сортированные по дате от самой дальней." +
             "При true возрващает только будущие экскурсии, начиная с самой ближайшей. " +
             "Ответ 200")
+    @LogExecutionTime
     @GetMapping
     public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam boolean onlyNext,
                                                      @RequestParam(required = false, defaultValue = "0") int page) {
@@ -86,6 +89,7 @@ public class UserExcursionController {
             "и возвращает список с названием, описанием и " +
             "датой проведения. Список отсортирован по алфавиту. " +
             "Ответ 200")
+    @LogExecutionTime
     @GetMapping("/findByName")
     public ResponseEntity<List<ExcursionDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(excursionService.getByNameLike(query).stream()
@@ -103,6 +107,7 @@ public class UserExcursionController {
             "Список отсортирован по дате проведения." +
             "При true вернутся только будущие экскурсии пользователя. " +
             "Список отсортирован от самой ближайшей до самой дальней.")
+    @LogExecutionTime
     @GetMapping("/own")
     public ResponseEntity<List<ExcursionDto>> getOwnExcursions(@AuthenticationPrincipal AuthUser authUser,
                                                                @RequestParam boolean onlyNext) {
@@ -120,6 +125,7 @@ public class UserExcursionController {
             "Возвращает список комментариев экскурсии по ее id с именем пользователя " +
             "и временем комментирования. Список отсртирован по времени. " +
             "Ответ 200, если id существует, иначе 404")
+    @LogExecutionTime
     @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllExcursionComments(@PathVariable int id) {
 
@@ -137,6 +143,7 @@ public class UserExcursionController {
             "имени данного пользователя. Сообщение не " +
             "должно превышать 300 знаков. " +
             "Ответ 200, если id существует, иначе 404")
+    @LogExecutionTime
     @PostMapping("/{id}/comment")
     public ResponseEntity<Object> createComment(@AuthenticationPrincipal AuthUser authUser,
                                                 @PathVariable int id,
@@ -165,6 +172,7 @@ public class UserExcursionController {
             "Возвращает список лайков экскурсии по ее id с именем " +
             "пользователя и названием экскурсии. " +
             "Ответ 200, если экскурсия существует, иначе 404")
+    @LogExecutionTime
     @GetMapping("/{id}/like")
     public ResponseEntity<List<LikeDto>> getAllExcursionLike(@PathVariable int id) {
 
@@ -181,6 +189,7 @@ public class UserExcursionController {
             "лайк для одной экскурсии только один раз. " +
             "Ответ 200, если экскурсия существует, иначе 404. " +
             "Повторная попытка поставить лайк вернет 400")
+    @LogExecutionTime
     @PostMapping("/{id}/like")
     public ResponseEntity<Object> createLike(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {
@@ -212,6 +221,7 @@ public class UserExcursionController {
             "которую записан данный пользователь. Возвращается " +
             "название, дата экскурсии и количество дней до экскурсии." +
             "Ответ 200")
+    @LogExecutionTime
     @GetMapping("/own/attention")
     public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser) {
 

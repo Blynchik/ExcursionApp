@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.LikeController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.LikeDto;
 import com.sovetnikov.application.model.AuthUser;
 import com.sovetnikov.application.model.Like;
@@ -34,6 +35,7 @@ public class UserLikeController {
             "Возвращает все лайки (имя пользователя, название экскурсии) " +
             "авторизованного пользователя. Ответ 200, если пользователь существует," +
             " иначе 404.")
+    @LogExecutionTime
     @GetMapping("/own")
     public ResponseEntity<List<LikeDto>> getAllUserLikes(@AuthenticationPrincipal AuthUser authUser) {
 
@@ -50,6 +52,7 @@ public class UserLikeController {
             "Удаляет лайк по id. Если лайк принадлежит другому пользователю, " +
             "то ответ 400, если id не существует - 404. При удачной " +
             "попытке - 200")
+    @LogExecutionTime
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {

@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.ProfileController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.AuthUser;
@@ -36,6 +37,7 @@ public class UserProfileController {
     @Operation(summary = "Доступна всем зарегистрированным пользователям. " +
             "Возвращает контактные данные пользователя по id. " +
             "Ответ 200, если id существует, иначе 404.")
+    @LogExecutionTime
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable final int id) {
 
@@ -56,6 +58,7 @@ public class UserProfileController {
     @Operation(summary = "Доступна всем зарегистрированным пользователям. " +
             "Удаляет только текущего пользователя." +
             "Ответ 200, иначе 404.")
+    @LogExecutionTime
     @DeleteMapping()
     public ResponseEntity<List<User>> delete(@AuthenticationPrincipal AuthUser authUser) {
 
@@ -75,6 +78,7 @@ public class UserProfileController {
             "остаются привязанными к этому пользователю. " +
             "Ограничения, такие же как и при создании пользователя." +
             "Ответ 200, иначе 404. При ошибке - 400")
+    @LogExecutionTime
     @PatchMapping()
     public ResponseEntity<Object> update(@AuthenticationPrincipal AuthUser authUser,
                                          @RequestBody @Valid BaseUserDto userDto,
@@ -109,6 +113,7 @@ public class UserProfileController {
             "Возвращает список пользователей по совпадению первых букв. " +
             "В запросе игнорируется регистр. Так же возвращаются контактные данные пользователей." +
             "Список сортирован по алфавиту.")
+    @LogExecutionTime
     @GetMapping("/findByName")
     public ResponseEntity<List<UserDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(userService.getByNameLike(query).stream()

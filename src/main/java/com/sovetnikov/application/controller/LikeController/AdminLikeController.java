@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.LikeController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.LikeDto;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
@@ -29,6 +30,7 @@ public class AdminLikeController {
     @Operation(summary = "Доступна только администратору. " +
             "Возвращает все лайки пользователя (имя пользователя, название экскурсии) или " +
             "пустой список. Ответ 200, если id существует, иначе 404")
+    @LogExecutionTime
     @GetMapping("/{id}/like")
     public ResponseEntity<List<LikeDto>> getAllUserLikes(@PathVariable int id) {
 
@@ -43,6 +45,7 @@ public class AdminLikeController {
 
     @Operation(summary = "Доступна только администратору. Удаялет любой лайк." +
             "Ответ 200, если лайк существует, иначе 404")
+    @LogExecutionTime
     @DeleteMapping("/like/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
 

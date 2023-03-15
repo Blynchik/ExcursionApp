@@ -1,5 +1,6 @@
 package com.sovetnikov.application.controller.CommentController;
 
+import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.model.AuthUser;
 import com.sovetnikov.application.model.Comment;
@@ -45,6 +46,7 @@ public class UserCommentController {
             "Удаляет комментарий данного пользователя по id комментария. " +
             "Если комментарий не принадлежит пользователю - ответ 400." +
             "Ответ 200, если такой комментарий существует, иначе 404")
+    @LogExecutionTime
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {

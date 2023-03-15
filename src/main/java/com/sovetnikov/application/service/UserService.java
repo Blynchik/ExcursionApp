@@ -1,6 +1,5 @@
 package com.sovetnikov.application.service;
 
-import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.config.SecurityConfig;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Role;
@@ -28,7 +27,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @LogExecutionTime
     @Transactional
     public void create(User user) {
         user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
@@ -36,17 +34,14 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @LogExecutionTime
     public Optional<User> get(int id) {
         return userRepository.findById(id);
     }
 
-    @LogExecutionTime
     public List<User> getAll(int page) {
         return userRepository.findAll(PageRequest.of(page, 3, Sort.by("name"))).getContent();
     }
 
-    @LogExecutionTime
     @Transactional
     public void update(User updatedUser, int id) {
         updatedUser.setRegisteredAt(userRepository.getReferenceById(id).getRegisteredAt());
@@ -56,42 +51,35 @@ public class UserService {
         userRepository.save(updatedUser);
     }
 
-    @LogExecutionTime
     @Transactional
     public void delete(int id) {
         userRepository.deleteById(id);
     }
 
-    @LogExecutionTime
     public Optional<User> getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    @LogExecutionTime
     public Optional<User> getByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    @LogExecutionTime
     @Transactional
     public void changeAuthority(int id, Role role) {
         userRepository.getReferenceById(id).setRole(role);
     }
 
-    @LogExecutionTime
     @Transactional
     public void changePassword(int id, String password) {
         userRepository.getReferenceById(id).setPassword(SecurityConfig.PASSWORD_ENCODER.encode(password));
     }
 
-    @LogExecutionTime
     public List<User> getByNameLike(String query) {
         List<User> list = userRepository.findByNameStartingWithIgnoreCase(query);
         list.sort(Comparator.comparing(User::getName));
         return list;
     }
 
-    @LogExecutionTime
     public List<Excursion> getWithExcursions(int id, boolean onlyNext) {
 
         if (onlyNext) {
@@ -107,7 +95,6 @@ public class UserService {
                 .toList();
     }
 
-    @LogExecutionTime
     public Excursion getTimeTillExcursion(int userId) {
         Excursion excursion = getWithExcursions(userId, true).get(0);
         long excursionDay = excursion.getDate().toEpochDay();
