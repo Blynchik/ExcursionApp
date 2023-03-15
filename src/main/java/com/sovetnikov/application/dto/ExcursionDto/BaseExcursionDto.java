@@ -23,7 +23,8 @@ public class BaseExcursionDto {
     @Min(value = 0, message = "Не должно быть отрицательным")
     private int price;
 
-    public BaseExcursionDto(){}
+    public BaseExcursionDto() {
+    }
 
     public BaseExcursionDto(String name, int price) {
         this.name = name;

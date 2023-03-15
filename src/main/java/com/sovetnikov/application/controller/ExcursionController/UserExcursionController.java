@@ -81,7 +81,7 @@ public class UserExcursionController {
                 }).collect(Collectors.toList()));
     }
 
-    @Operation (summary = "Доступна всем пользователям. " +
+    @Operation(summary = "Доступна всем пользователям. " +
             "Ищет экскурсии по совпадающим первым буквам " +
             "и возвращает список с названием, описанием и " +
             "датой проведения. Список отсортирован по алфавиту. " +
@@ -214,10 +214,12 @@ public class UserExcursionController {
             "Ответ 200")
     @GetMapping("/own/attention")
     public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser) {
+
         Excursion excursion = userService.getTimeTillExcursion(authUser.id());
         ExcursionDto excursionDto = Converter.getExcursionDto(excursion);
         excursionDto.setDate(excursion.getDate());
         excursionDto.setDaysTillExcursion(excursion.getDaysTillExcursion());
+
         return ResponseEntity.ok().body(excursionDto);
     }
 }

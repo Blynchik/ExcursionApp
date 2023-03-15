@@ -2,8 +2,6 @@ package com.sovetnikov.application.repository;
 
 import com.sovetnikov.application.aspect.LogExecutionTime;
 import com.sovetnikov.application.model.Comment;
-import com.sovetnikov.application.model.Excursion;
-import com.sovetnikov.application.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

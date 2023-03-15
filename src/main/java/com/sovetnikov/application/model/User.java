@@ -1,14 +1,11 @@
 package com.sovetnikov.application.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-import org.hibernate.annotations.Cache;
 
 @Entity
 @Table(name = "users")

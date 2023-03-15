@@ -42,9 +42,11 @@ public class UserProfileController {
         Optional<User> user = userService.get(id);
 
         if (user.isPresent()) {
+
             UserDto userDto = Converter.getUserDto(user.get());
             userDto.setEmail(user.get().getEmail());
             userDto.setPhoneNumber(user.get().getPhoneNumber());
+
             return ResponseEntity.ok().body(userDto);
         }
 
@@ -58,14 +60,16 @@ public class UserProfileController {
     public ResponseEntity<List<User>> delete(@AuthenticationPrincipal AuthUser authUser) {
 
         if (userService.get(authUser.id()).isPresent()) {
+
             userService.delete(authUser.id());
+
             return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @Operation (summary = "Доступна всем зарегистрированным пользователям." +
+    @Operation(summary = "Доступна всем зарегистрированным пользователям." +
             " Полностью изменяет личные данные текущего пользователя. " +
             "Все лайки, комментарии, экскурсии " +
             "остаются привязанными к этому пользователю. " +
@@ -80,15 +84,18 @@ public class UserProfileController {
         userValidator.validate(userDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
 
         if (userService.get(authUser.id()).isPresent()) {
+
             User user = Converter.getUser(userDto);
             userService.update(user, authUser.id());
 
             if (password != null && !password.isEmpty() && !password.isBlank()) {
+
                 userService.changePassword(authUser.id(), password);
             }
 

@@ -1,14 +1,10 @@
 package com.sovetnikov.application.service;
 
 import com.sovetnikov.application.aspect.LogExecutionTime;
-import com.sovetnikov.application.config.SecurityConfig;
 import com.sovetnikov.application.dao.ExcursionDao;
 import com.sovetnikov.application.model.Excursion;
-import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.ExcursionRepository;
-import com.sovetnikov.application.repository.LikeRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -116,7 +112,7 @@ public class ExcursionService {
     }
 
     @LogExecutionTime
-    public int getLikesAmount(int excursionId){
+    public int getLikesAmount(int excursionId) {
         return likeService.getExcursionLikes(excursionId).size();
     }
 }

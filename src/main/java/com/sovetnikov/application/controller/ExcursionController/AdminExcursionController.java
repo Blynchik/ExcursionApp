@@ -1,12 +1,9 @@
 package com.sovetnikov.application.controller.ExcursionController;
 
-import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.dto.ExcursionDto.BaseExcursionDto;
 import com.sovetnikov.application.dto.ExcursionDto.ExcursionDto;
-import com.sovetnikov.application.dto.LikeDto;
 import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.*;
-import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
@@ -16,12 +13,9 @@ import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.ExcursionUtils.ExcursionValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,19 +31,16 @@ public class AdminExcursionController {
 
     private final ExcursionService excursionService;
     private final ExcursionValidator excursionValidator;
-    private final CommentService commentService;
     private final UserService userService;
     private final LikeService likeService;
 
     @Autowired
     public AdminExcursionController(ExcursionService excursionService,
                                     ExcursionValidator excursionValidator,
-                                    CommentService commentService,
                                     UserService userService,
                                     LikeService likeService) {
         this.excursionService = excursionService;
         this.excursionValidator = excursionValidator;
-        this.commentService = commentService;
         this.userService = userService;
         this.likeService = likeService;
     }
@@ -165,7 +156,7 @@ public class AdminExcursionController {
         return ResponseEntity.notFound().build();
     }
 
-    @Operation( summary = "Доступна только администратору. " +
+    @Operation(summary = "Доступна только администратору. " +
             "Исключает из экскурсии (id) пользователя (userId). " +
             "Если пользователь существует и состоит в существующей экскурсии - " +
             "ответ 200, иначе 404")
@@ -198,7 +189,7 @@ public class AdminExcursionController {
         Optional<User> user = userService.get(userId);
 
         if (user.isPresent() && excursionService.get(id).isPresent()) {
-            if (!excursionService.getWithUsers(id).contains(user.get())){
+            if (!excursionService.getWithUsers(id).contains(user.get())) {
                 excursionService.addUserToExcursion(id, userId);
 
                 return ResponseEntity.ok().build();

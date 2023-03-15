@@ -8,7 +8,7 @@ import java.util.Collections;
 public class AuthUser extends org.springframework.security.core.userdetails.User {
     private final User user;
 
-    public AuthUser(@NonNull User user){
+    public AuthUser(@NonNull User user) {
         super(user.getEmail(), user.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
         this.user = user;

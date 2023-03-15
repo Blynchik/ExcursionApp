@@ -23,13 +23,13 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        BaseUserDto user = (BaseUserDto)target;
+        BaseUserDto user = (BaseUserDto) target;
 
-        if (userService.getByEmail(user.getEmail()).isPresent()){
+        if (userService.getByEmail(user.getEmail()).isPresent()) {
             errors.rejectValue("email", "", "Электронная почта уже используется");
         }
 
-        if (userService.getByPhoneNumber(user.getPhoneNumber()).isPresent()){
+        if (userService.getByPhoneNumber(user.getPhoneNumber()).isPresent()) {
             errors.rejectValue("phoneNumber", "", "Номер телефона уже используется");
         }
     }

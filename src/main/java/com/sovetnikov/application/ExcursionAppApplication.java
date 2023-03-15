@@ -111,8 +111,8 @@ public class ExcursionAppApplication implements ApplicationRunner {
         for (int i = 0; i < 20; i++) {
             Comment comment = new Comment(
                     messages.get((int) (Math.random() * messages.size())),
-                    userService.get((int) (Math.random() * 10)+1).get(),
-                    excursionService.get((int)(Math.random()*8)+1).get());
+                    userService.get((int) (Math.random() * 10) + 1).get(),
+                    excursionService.get((int) (Math.random() * 8) + 1).get());
 
             commentService.create(comment);
         }

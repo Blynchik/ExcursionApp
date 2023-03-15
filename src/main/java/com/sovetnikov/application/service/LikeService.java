@@ -6,12 +6,9 @@ import com.sovetnikov.application.model.Like;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +57,7 @@ public class LikeService {
 
     @LogExecutionTime
     @Transactional
-    public void clearAllLikes(int excursionId){
+    public void clearAllLikes(int excursionId) {
         likeRepository.deleteAllByExcursion_Id(excursionId);
     }
 }

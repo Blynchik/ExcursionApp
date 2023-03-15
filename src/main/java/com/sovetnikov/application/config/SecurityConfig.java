@@ -15,11 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Configuration
@@ -44,7 +42,7 @@ public class SecurityConfig {
             Optional<User> optionalUser = userService.getByEmail(email);
 
             return new AuthUser(optionalUser.orElseThrow(
-                    ()-> new UsernameNotFoundException("Пользователь не существует")));
+                    () -> new UsernameNotFoundException("Пользователь не существует")));
         };
     }
 

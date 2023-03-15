@@ -4,12 +4,8 @@ import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.model.AuthUser;
 import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.service.CommentService;
-import com.sovetnikov.application.service.ExcursionService;
-import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +20,10 @@ import java.util.Optional;
 public class UserCommentController {
 
     private final CommentService commentService;
-    private final ExcursionService excursionService;
-    private final UserService userService;
 
     @Autowired
-    public UserCommentController(CommentService commentService,
-                                 ExcursionService excursionService,
-                                 UserService userService) {
+    public UserCommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.excursionService = excursionService;
-        this.userService = userService;
     }
 
     @Operation(summary = "Доступна всем пользователям. " +
@@ -44,9 +34,10 @@ public class UserCommentController {
     @GetMapping("/own")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok().body(commentService.getUserComment(authUser.id()).stream()
-                .map(c->{CommentDto commentDto = Converter.getCommentDto(c);
-                commentDto.setExcursionDto(Converter.getExcursionDto(c.getExcursion()));
-                return commentDto;
+                .map(c -> {
+                    CommentDto commentDto = Converter.getCommentDto(c);
+                    commentDto.setExcursionDto(Converter.getExcursionDto(c.getExcursion()));
+                    return commentDto;
                 }).toList());
     }
 

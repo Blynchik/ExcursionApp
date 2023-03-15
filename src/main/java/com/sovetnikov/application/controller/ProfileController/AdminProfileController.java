@@ -6,7 +6,6 @@ import com.sovetnikov.application.dto.UserDto.BaseUserDto;
 import com.sovetnikov.application.dto.UserDto.UserDto;
 import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
-import com.sovetnikov.application.repository.UserRepository;
 import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
@@ -17,7 +16,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,19 +33,16 @@ public class AdminProfileController {
     private final UserValidator userValidator;
     private final CommentService commentService;
     private final LikeService likeService;
-    private final UserRepository userRepository;
 
     @Autowired
     public AdminProfileController(UserService userService,
                                   UserValidator userValidator,
                                   CommentService commentService,
-                                  LikeService likeService,
-                                  UserRepository userRepository) {
+                                  LikeService likeService) {
         this.userService = userService;
         this.userValidator = userValidator;
         this.commentService = commentService;
         this.likeService = likeService;
-        this.userRepository = userRepository;
     }
 
     @Operation(summary = "Доступна только администратору. " +
@@ -125,6 +120,7 @@ public class AdminProfileController {
         userValidator.validate(userDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
@@ -144,14 +140,16 @@ public class AdminProfileController {
     public ResponseEntity<List<UserDto>> delete(@PathVariable int id) {
 
         if (userService.get(id).isPresent()) {
+
             userService.delete(id);
+
             return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @Operation (summary = "Доступна только администратору. Полностью изменяет " +
+    @Operation(summary = "Доступна только администратору. Полностью изменяет " +
             "личные данные пользователя по id. Все лайки, комментарии, экскурсии " +
             "остаются привязанными к этому пользователю. " +
             "Ограничения, такие же как и при создании пользователя." +
@@ -167,11 +165,13 @@ public class AdminProfileController {
 
 
         if (bindingResult.hasErrors()) {
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ErrorList.getList(bindingResult));
         }
 
         if (userService.get(id).isPresent()) {
+
             User user = Converter.getUser(userDto);
             userService.update(user, id);
 

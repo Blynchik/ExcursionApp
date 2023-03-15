@@ -3,7 +3,6 @@ package com.sovetnikov.application.controller.LikeController;
 import com.sovetnikov.application.dto.LikeDto;
 import com.sovetnikov.application.model.AuthUser;
 import com.sovetnikov.application.model.Like;
-import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
@@ -22,15 +21,12 @@ import java.util.Optional;
 public class UserLikeController {
 
     private final LikeService likeService;
-    private final ExcursionService excursionService;
     private final UserService userService;
 
     @Autowired
     public UserLikeController(LikeService likeService,
-                               ExcursionService excursionService,
-                               UserService userService) {
+                              UserService userService) {
         this.likeService = likeService;
-        this.excursionService = excursionService;
         this.userService = userService;
     }
 

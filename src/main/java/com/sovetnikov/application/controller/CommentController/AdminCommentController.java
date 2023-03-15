@@ -3,8 +3,6 @@ package com.sovetnikov.application.controller.CommentController;
 import com.sovetnikov.application.dto.CommentDto;
 import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.service.CommentService;
-import com.sovetnikov.application.service.ExcursionService;
-import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +18,10 @@ import java.util.Optional;
 public class AdminCommentController {
 
     private final CommentService commentService;
-    private final ExcursionService excursionService;
-    private final UserService userService;
 
     @Autowired
-    public AdminCommentController(CommentService commentService,
-                                  ExcursionService excursionService,
-                                  UserService userService) {
+    public AdminCommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.excursionService = excursionService;
-        this.userService = userService;
     }
 
     @Operation(summary = "Доступна только администратору." +

@@ -6,7 +6,6 @@ import com.sovetnikov.application.model.Role;
 import com.sovetnikov.application.model.User;
 import com.sovetnikov.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,7 @@ public class RegistrationService {
 
     @LogExecutionTime
     @Transactional
-    public void register(User user){
+    public void register(User user) {
         user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
         user.setRole(Role.ROLE_USER);
         userRepository.save(user);

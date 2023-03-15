@@ -1,7 +1,6 @@
 package com.sovetnikov.application.repository;
 
 import com.sovetnikov.application.aspect.LogExecutionTime;
-import com.sovetnikov.application.model.Comment;
 import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
 import com.sovetnikov.application.model.User;
