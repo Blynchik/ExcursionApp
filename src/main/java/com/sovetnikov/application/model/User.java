@@ -26,7 +26,7 @@ public class User {
 
     @Column(name = "email")
     @NotBlank(message = "Введите электронную почту")
-    @Size(max = 100, message = "Должно бытьменьше 100 символов")
+    @Size(max = 100, message = "Должно быть меньше 100 символов")
     @Email(message = "Введите корректную электронную почту")
     private String email;
 

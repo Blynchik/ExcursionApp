@@ -14,10 +14,10 @@ import com.sovetnikov.application.util.CompetitionTimer;
 import com.sovetnikov.application.util.Converter;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.ExcursionUtils.ExcursionValidator;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import jdk.dynalink.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +54,10 @@ public class AdminExcursionController {
         this.likeService = likeService;
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Возвращает по id название экскурсии, дату ее проведения, " +
+            "количество лайков и список всех пользователей (в алфавитном порядке), которые на нее записаны" +
+            " с контактными даннымми. Ответ 200, если id существует, иначе 404")
     @GetMapping("/{id}")
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
@@ -80,6 +84,14 @@ public class AdminExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Создает новую экскурсию. Ограничения. " +
+            "Название всегда должно начинаться с заглавной буквы." +
+            "Название должно состоять от 2 до 100 символов." +
+            "Описание - не превышать более 500 символов, может быть пустым." +
+            "Цена не должна быть отрицательнной. " +
+            "Дата должна соответствовать формату. " +
+            "Ответ 200, при ошибке - 400.")
     @PostMapping()
     public ResponseEntity<Object> createExcursion(@Valid @RequestBody BaseExcursionDto excursionDto,
                                                   BindingResult bindingResult) {
@@ -97,6 +109,10 @@ public class AdminExcursionController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Доступна только администратору. Удаляет экскурсию по id." +
+            "Все ее лайки удаляются, список записанных на нее пользователей очищается, " +
+            "комментарии к этой экскурсии остаются, но в названии эскурсии будет null." +
+            "Ответ 200, если id существует, иначе 404")
     @DeleteMapping("/{id}")
     public ResponseEntity<List<ExcursionDto>> delete(@PathVariable int id) {
 
@@ -108,6 +124,10 @@ public class AdminExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Полностью изменяет данные эккскурсии по id. Ограничения, " +
+            "такие же как и при создании экскурсии. Ответ 200, если id существует, " +
+            "иначе 404. При ошибке - 400")
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
                                          @Valid @RequestBody BaseExcursionDto excursionDto,
@@ -130,6 +150,9 @@ public class AdminExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Полностью очищает список пользователей, записанных на экскурсию по ее id. " +
+            "Ответ 200, если id существует, иначе 404")
     @PatchMapping("/{id}/clear")
     public ResponseEntity<HttpStatus> clearExcursionUsers(@PathVariable int id) {
 
@@ -142,6 +165,10 @@ public class AdminExcursionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation( summary = "Доступна только администратору. " +
+            "Исключает из экскурсии (id) пользователя (userId). " +
+            "Если пользователь существует и состоит в существующей экскурсии - " +
+            "ответ 200, иначе 404")
     @PatchMapping("/{id}/exclusion")
     public ResponseEntity<HttpStatus> excludeUser(@PathVariable int id,
                                                   @RequestParam int userId) {
@@ -160,6 +187,10 @@ public class AdminExcursionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Записывает пользователя (userId) на экскурсию (id), " +
+            "если пользователь и экскурсия существуют. Дублирование пользователей " +
+            "пресекается - ответ 400. Ответ 200, если id не существуют, то - 404")
     @PatchMapping("/{id}/add")
     public ResponseEntity<HttpStatus> addUser(@PathVariable int id,
                                               @RequestParam int userId) {
@@ -179,6 +210,9 @@ public class AdminExcursionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Обнуляет лайки экскурсии по ее id. " +
+            "Ответ 200, если экскурсия существует, иначе 404")
     @PatchMapping("/{id}/zeroing")
     public ResponseEntity<HttpStatus> zeroingLikes(@PathVariable int id) {
 
@@ -190,6 +224,15 @@ public class AdminExcursionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна только для администратора. " +
+            "Возвращает список прошедших экскурсий с их названием и датой" +
+            " проведения. Список отсортирован по количеству лайков " +
+            "от большего к меньшему. После выявления победителя " +
+            "лайки обнуляются для для прошедших экскурсий. На данный момент" +
+            " определять победителя можно каждый день. Период голосования можно " +
+            "изменить в com.sovetnikov.application.CompetitionTimer. " +
+            "Если период соревнования еще не истек, то ответ 204." +
+            "При удачном запросе - 200")
     @GetMapping("/getWinner")
     public ResponseEntity<List<ExcursionDto>> getWinner() {
         if (CompetitionTimer.timeToCompare()) {

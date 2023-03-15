@@ -7,6 +7,7 @@ import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,12 +34,26 @@ public class UserLikeController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Доступна всем зарегестрированным пользователям. " +
+            "Возвращает все лайки (имя пользователя, название экскурсии) " +
+            "авторизованного пользователя. Ответ 200, если пользователь существует," +
+            " иначе 404.")
     @GetMapping("/own")
     public ResponseEntity<List<LikeDto>> getAllUserLikes(@AuthenticationPrincipal AuthUser authUser) {
-        return ResponseEntity.ok().body(likeService.getUserLikes(authUser.id()).stream()
-                .map(Converter::getLikeDto).toList());
+
+        if (userService.get(authUser.id()).isPresent()) {
+
+            return ResponseEntity.ok().body(likeService.getUserLikes(authUser.id()).stream()
+                    .map(Converter::getLikeDto).toList());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна всем зарегистрированным пользователям. " +
+            "Удаляет лайк по id. Если лайк принадлежит другому пользователю, " +
+            "то ответ 400, если id не существует - 404. При удачной " +
+            "попытке - 200")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {

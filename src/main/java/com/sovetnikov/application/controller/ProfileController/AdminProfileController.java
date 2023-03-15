@@ -12,6 +12,7 @@ import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,14 @@ public class AdminProfileController {
         this.userRepository = userRepository;
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Возвращает контактные данные пользователя по id, " +
+            "экскурсии, на которые он записан (название, дата выезда), " +
+            "его комментарии (сообщение, имя, экскурсия, дата и время комментирования), " +
+            "его лайки (имя, экскурсия). При false возвращает все экскурсии, " +
+            "где записан пользотватель, включая прошедшие. При true возвращает только будущие экскурсии. " +
+            "Экскурсии сортированы от ближайшей к более дальной. " +
+            "Ответ 200, если пользователь найден, иначе 404.")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable int id,
                                           @RequestParam boolean onlyNext) {
@@ -69,7 +78,7 @@ public class AdminProfileController {
                     }).toList());
 
             userDto.setComments(commentService.getUserComment(id).stream()
-                    .map(c->{
+                    .map(c -> {
                         CommentDto comm = Converter.getCommentDto(c);
                         comm.setExcursionDto(Converter.getExcursionDto(c.getExcursion()));
                         return comm;
@@ -84,6 +93,10 @@ public class AdminProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна только администратору." +
+            " Возвращает список всех пользователей " +
+            "в алфавитном порядке по 3 пользователя на странице. Нумерация страниц с 0." +
+            " Пользователи возвращаются с информацией о имени, эл. почте и номере телефона")
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll(@RequestParam(defaultValue = "0") int page) {
         return ResponseEntity.ok().body(userService.getAll(page).stream()
@@ -95,6 +108,15 @@ public class AdminProfileController {
                 }).collect(Collectors.toList()));
     }
 
+    @Operation(summary = "Доступна только для администратора. Создает нового пользователя." +
+            " Администратор должен назначить роль. " +
+            " При введении невалидных значений возвращает 400, иначе 200. " +
+            " Ограничения. Пароль не может быть null, дополнительно шифруется перед " +
+            " сохранением в БД. Имя не может быть пустым " +
+            "и должно состоять от 2 до 100 знаков. " +
+            "Электронная почта должна быть корректной (игнорируется регистр), уникальной, не превышать 100 знаков" +
+            " и не должна быть пустой. " +
+            "Номер телефона должен состоять из 10 цифр, быть уникальным и не пустым.")
     @PostMapping()
     public ResponseEntity<Object> create(@Valid @RequestBody BaseUserDto userDto,
                                          BindingResult bindingResult,
@@ -114,6 +136,10 @@ public class AdminProfileController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Удаляет пользователя по id. Все его записи на экскурсии отменяются. " +
+            "Лайки удаляются. Комментарии остаются без пользователя. " +
+            "Ответ 200, если такой id существует, иначе 404")
     @DeleteMapping("/{id}")
     public ResponseEntity<List<UserDto>> delete(@PathVariable int id) {
 
@@ -125,6 +151,11 @@ public class AdminProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation (summary = "Доступна только администратору. Полностью изменяет " +
+            "личные данные пользователя по id. Все лайки, комментарии, экскурсии " +
+            "остаются привязанными к этому пользователю. " +
+            "Ограничения, такие же как и при создании пользователя." +
+            "Ответ 200, если такой id есть, иначе 404. При ошибке - 400")
     @PatchMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
                                          @Valid @RequestBody BaseUserDto userDto,

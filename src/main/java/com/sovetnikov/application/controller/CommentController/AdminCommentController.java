@@ -6,6 +6,7 @@ import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,10 @@ public class AdminCommentController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Доступна только администратору." +
+            "Возвращает комментарий по его id с сообщением, названием экскурсии, " +
+            "именем пользователя и временем комментирования." +
+            "Ответ 200, если комментарий существует, иначе 404")
     @GetMapping("/comment/{id}")
     public ResponseEntity<CommentDto> getOne(@PathVariable int id) {
 
@@ -45,6 +50,11 @@ public class AdminCommentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Возвращает все комментарии пользователя по его id " +
+            "с сообщением, именем, названием экскурсии и временем комментирования." +
+            "Все комментарии сортированы по времени." +
+            "Ответ 200, если пользователь существует, иначе 404")
     @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@PathVariable int id) {
 
@@ -59,6 +69,9 @@ public class AdminCommentController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Удаляет комментарий по его id. Ответ 200, " +
+            "если комментарий существует, иначе 404")
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
 

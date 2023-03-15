@@ -9,6 +9,7 @@ import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,10 @@ public class UserExcursionController {
         this.likeService = likeService;
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает название экскурсии, дату проведения, цену " +
+            "и количество лайков по id экскурсии. Ответ 200, если id " +
+            "существует, иначе 404")
     @GetMapping("/{id}")
     public ResponseEntity<ExcursionDto> getOne(@PathVariable int id) {
 
@@ -51,7 +56,6 @@ public class UserExcursionController {
             excursionDto.setDate(excursion.get().getDate());
             excursionDto.setPrice(excursion.get().getPrice());
             excursionDto.setLikesAmount(excursionService.getLikesAmount(id));
-            excursionDto.setDaysTillExcursion(excursion.get().getDaysTillExcursion());
 
             return ResponseEntity.ok().body(excursionDto);
         }
@@ -59,6 +63,12 @@ public class UserExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает список экскурсий с названием, датой проведения " +
+            "и описанием. Есть разделение на страницы по 3 экскурсии, отсчет с 0. " +
+            "При false возращает все экскурсии, сортированные по дате от самой дальней." +
+            "При true возрващает только будущие экскурсии, начиная с самой ближайшей. " +
+            "Ответ 200")
     @GetMapping
     public ResponseEntity<List<ExcursionDto>> getAll(@RequestParam boolean onlyNext,
                                                      @RequestParam(required = false, defaultValue = "0") int page) {
@@ -71,6 +81,11 @@ public class UserExcursionController {
                 }).collect(Collectors.toList()));
     }
 
+    @Operation (summary = "Доступна всем пользователям. " +
+            "Ищет экскурсии по совпадающим первым буквам " +
+            "и возвращает список с названием, описанием и " +
+            "датой проведения. Список отсортирован по алфавиту. " +
+            "Ответ 200")
     @GetMapping("/findByName")
     public ResponseEntity<List<ExcursionDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(excursionService.getByNameLike(query).stream()
@@ -82,6 +97,12 @@ public class UserExcursionController {
                 }).collect(Collectors.toList()));
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает список экскурсий данного пользователя, на которые он записан. " +
+            "При false вернутся все экскурсии пользователя, включая прошедшие. " +
+            "Список отсортирован по дате проведения." +
+            "При true вернутся только будущие экскурсии пользователя. " +
+            "Список отсортирован от самой ближайшей до самой дальней.")
     @GetMapping("/own")
     public ResponseEntity<List<ExcursionDto>> getOwnExcursions(@AuthenticationPrincipal AuthUser authUser,
                                                                @RequestParam boolean onlyNext) {
@@ -95,6 +116,10 @@ public class UserExcursionController {
                         }).toList());
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает список комментариев экскурсии по ее id с именем пользователя " +
+            "и временем комментирования. Список отсртирован по времени. " +
+            "Ответ 200, если id существует, иначе 404")
     @GetMapping("/{id}/comment")
     public ResponseEntity<List<CommentDto>> getAllExcursionComments(@PathVariable int id) {
 
@@ -107,6 +132,11 @@ public class UserExcursionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Создает комментарий к экскурсии по ее id от " +
+            "имени данного пользователя. Сообщение не " +
+            "должно превышать 300 знаков. " +
+            "Ответ 200, если id существует, иначе 404")
     @PostMapping("/{id}/comment")
     public ResponseEntity<Object> createComment(@AuthenticationPrincipal AuthUser authUser,
                                                 @PathVariable int id,
@@ -131,6 +161,10 @@ public class UserExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает список лайков экскурсии по ее id с именем " +
+            "пользователя и названием экскурсии. " +
+            "Ответ 200, если экскурсия существует, иначе 404")
     @GetMapping("/{id}/like")
     public ResponseEntity<List<LikeDto>> getAllExcursionLike(@PathVariable int id) {
 
@@ -141,6 +175,12 @@ public class UserExcursionController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Создает лайк для экскурсии по ее id. Все " +
+            "лайки уникальны, один пользователь может поставить " +
+            "лайк для одной экскурсии только один раз. " +
+            "Ответ 200, если экскурсия существует, иначе 404. " +
+            "Повторная попытка поставить лайк вернет 400")
     @PostMapping("/{id}/like")
     public ResponseEntity<Object> createLike(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {
@@ -167,6 +207,11 @@ public class UserExcursionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает ближайшую по дате экскурсию, на " +
+            "которую записан данный пользователь. Возвращается " +
+            "название, дата экскурсии и количество дней до экскурсии." +
+            "Ответ 200")
     @GetMapping("/own/attention")
     public ResponseEntity<ExcursionDto> getAttention(@AuthenticationPrincipal AuthUser authUser) {
         Excursion excursion = userService.getTimeTillExcursion(authUser.id());

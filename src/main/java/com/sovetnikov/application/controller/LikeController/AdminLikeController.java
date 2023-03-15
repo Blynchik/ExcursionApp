@@ -9,6 +9,7 @@ import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.LikeService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,22 @@ public class AdminLikeController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Доступна только администратору. " +
+            "Возвращает все лайки пользователя (имя пользователя, название экскурсии) или " +
+            "пустой список. Ответ 200, если id существует, иначе 404")
     @GetMapping("/{id}/like")
     public ResponseEntity<List<LikeDto>> getAllUserLikes(@PathVariable int id) {
-        return ResponseEntity.ok().body(likeService.getUserLikes(id).stream()
-                .map(Converter::getLikeDto).toList());
+
+        if (userService.get(id).isPresent()) {
+            return ResponseEntity.ok().body(likeService.getUserLikes(id).stream()
+                    .map(Converter::getLikeDto).toList());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Доступна только администратору. Удаялет любой лайк." +
+    "Ответ 200, если лайк существует, иначе 404")
     @DeleteMapping("/like/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
 

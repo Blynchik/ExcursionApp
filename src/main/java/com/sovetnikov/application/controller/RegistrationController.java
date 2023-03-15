@@ -6,6 +6,7 @@ import com.sovetnikov.application.service.RegistrationService;
 import com.sovetnikov.application.util.Converter;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,6 +30,16 @@ public class RegistrationController {
         this.userValidator = userValidator;
     }
 
+    @Operation(summary="Создает нового пользователя без авторизации c правами пользователя. " +
+            "Едиственная доступная функция для анонимных пользователей. " +
+            "После авторизации недоступна. " +
+            "При введении невалидных значений возвращает 400, иначе 200. " +
+            "Ограничения. Пароль не может быть null, дополнительно шифруется перед " +
+            " сохранением в БД. Имя не может быть пустым " +
+            "и должно состоять от 2 до 100 знаков. " +
+            "Электронная почта должна быть корректной (игнорируется регистр), уникальной, не превышать 100 знаков" +
+            " и не должна быть пустой. " +
+            "Номер телефона должен состоять из 10 цифр, быть уникальным и не пустым.")
     @PostMapping()
     public ResponseEntity<Object> register(@Valid @RequestBody BaseUserDto userDto,
                                            BindingResult bindingResult,

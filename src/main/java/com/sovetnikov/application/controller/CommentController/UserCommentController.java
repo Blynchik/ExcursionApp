@@ -7,6 +7,7 @@ import com.sovetnikov.application.service.CommentService;
 import com.sovetnikov.application.service.ExcursionService;
 import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class UserCommentController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Возвращает все комментарии данного пользователя " +
+            "с именем, нащванием экскурсии, сообщением и временем кмментирования." +
+            "Все комментарии отсортированы по времени." +
+            "Ответ 200")
     @GetMapping("/own")
     public ResponseEntity<List<CommentDto>> getAllUserComments(@AuthenticationPrincipal AuthUser authUser) {
         return ResponseEntity.ok().body(commentService.getUserComment(authUser.id()).stream()
@@ -44,6 +50,10 @@ public class UserCommentController {
                 }).toList());
     }
 
+    @Operation(summary = "Доступна всем пользователям. " +
+            "Удаляет комментарий данного пользователя по id комментария. " +
+            "Если комментарий не принадлежит пользователю - ответ 400." +
+            "Ответ 200, если такой комментарий существует, иначе 404")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@AuthenticationPrincipal AuthUser authUser,
                                              @PathVariable int id) {

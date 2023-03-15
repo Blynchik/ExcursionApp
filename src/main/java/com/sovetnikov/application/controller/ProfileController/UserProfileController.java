@@ -8,6 +8,7 @@ import com.sovetnikov.application.service.UserService;
 import com.sovetnikov.application.util.Converter;
 import com.sovetnikov.application.util.ErrorList;
 import com.sovetnikov.application.util.UserUtils.UserValidator;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,9 @@ public class UserProfileController {
         this.userValidator = userValidator;
     }
 
+    @Operation(summary = "Доступна всем зарегистрированным пользователям. " +
+            "Возвращает контактные данные пользователя по id. " +
+            "Ответ 200, если id существует, иначе 404.")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getOne(@PathVariable final int id) {
 
@@ -47,6 +51,9 @@ public class UserProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна всем зарегистрированным пользователям. " +
+            "Удаляет только текущего пользователя." +
+            "Ответ 200, иначе 404.")
     @DeleteMapping()
     public ResponseEntity<List<User>> delete(@AuthenticationPrincipal AuthUser authUser) {
 
@@ -58,6 +65,12 @@ public class UserProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation (summary = "Доступна всем зарегистрированным пользователям." +
+            " Полностью изменяет личные данные текущего пользователя. " +
+            "Все лайки, комментарии, экскурсии " +
+            "остаются привязанными к этому пользователю. " +
+            "Ограничения, такие же как и при создании пользователя." +
+            "Ответ 200, иначе 404. При ошибке - 400")
     @PatchMapping()
     public ResponseEntity<Object> update(@AuthenticationPrincipal AuthUser authUser,
                                          @RequestBody @Valid BaseUserDto userDto,
@@ -85,6 +98,10 @@ public class UserProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @Operation(summary = "Доступна всем зарегистрированным пользователям. " +
+            "Возвращает список пользователей по совпадению первых букв. " +
+            "В запросе игнорируется регистр. Так же возвращаются контактные данные пользователей." +
+            "Список сортирован по алфавиту.")
     @GetMapping("/findByName")
     public ResponseEntity<List<UserDto>> getByName(@RequestParam String query) {
         return ResponseEntity.ok().body(userService.getByNameLike(query).stream()
