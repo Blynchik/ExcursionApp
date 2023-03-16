@@ -230,7 +230,7 @@ public class AdminExcursionController {
             "от большего к меньшему. После выявления победителя " +
             "лайки обнуляются для для прошедших экскурсий. На данный момент" +
             " определять победителя можно каждый день. Период голосования можно " +
-            "изменить в com.sovetnikov.application.CompetitionTimer. " +
+            "изменить в com.sovetnikov.application.util.CompetitionTimer. " +
             "Если период соревнования еще не истек, то ответ 204." +
             "При удачном запросе - 200")
     @LogExecutionTime
