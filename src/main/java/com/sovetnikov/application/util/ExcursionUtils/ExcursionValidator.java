@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+//Валидирует введенные поля для экскурсий дополнительно
 @Component
 public class ExcursionValidator implements Validator {
 

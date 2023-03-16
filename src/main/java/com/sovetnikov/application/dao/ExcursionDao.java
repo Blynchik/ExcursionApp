@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+//проще обратиться к БД, чем создавать сущность для таблицы users_excursion
 @Component
 public class ExcursionDao {
 

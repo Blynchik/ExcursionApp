@@ -36,6 +36,7 @@ public class User {
     @Column(name = "registered_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
+    //время создания пользователя абсолютно
     private Date registeredAt = new Date();
 
     @Column(name = "password", nullable = false)

@@ -24,6 +24,7 @@ public class Comment {
     @Column(name = "created_at", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
+    //время создания комментария абсолютно
     private Date createdAt = new Date();
 
     @ManyToOne

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+//Валидирует введенные поля для пользователя дополнительно
 @Component
 public class UserValidator implements Validator {
     private final UserService userService;

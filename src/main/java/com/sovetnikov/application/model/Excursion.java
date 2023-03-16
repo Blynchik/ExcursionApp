@@ -24,6 +24,8 @@ public class Excursion {
 
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
+    //время проведения экскурсии относительно
+    //т.к. проходит всегда по местному времени
     private LocalDate date;
 
     @Column(name = "description")
@@ -32,6 +34,9 @@ public class Excursion {
 
     @Column(name = "price")
     @Min(value = 0, message = "Не должно быть отрицательным")
+    //стоимость в целых числах, а не в вещественных
+    //например, если стоимость указана в центах/копейках
+    //удобно переводить в другую валюту, переводить в рубли/доллары
     private int price;
 
     @ManyToMany(mappedBy = "excursions")

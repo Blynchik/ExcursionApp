@@ -10,6 +10,8 @@ import com.sovetnikov.application.model.Excursion;
 import com.sovetnikov.application.model.Like;
 import com.sovetnikov.application.model.User;
 
+//Переводит сущность в DTO и обратно,
+//инициализируя при этом некоторые поля
 public class Converter {
 
     public static UserDto getUserDto(User user) {

@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
+//Содержит список ошибок
 public class ErrorList {
 
     public static List<String> getList(BindingResult bindingResult) {
