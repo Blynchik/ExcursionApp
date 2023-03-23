@@ -73,7 +73,7 @@
 41. Настроить аутентификацию и авторизацию прямо в Swagger Open API
 42. Создать кастомную аннотацию для подсчета вермени, необходимого для выполнения метода, с выведением в консоль
 
-### Стэк: Spring Boot, Spring Data JPA, Spring Security, Spring JdbcTemplate, Hibernate, Spring Validator, PostgreSQL, H2, Git, Maven
+### Стэк: Spring Boot, Spring Data JPA, Spring Security, Spring JdbcTemplate, Hibernate, Spring Validator, PostgreSQL, H2, Git, Maven, Swagger Open API
 
 # Документация
 
